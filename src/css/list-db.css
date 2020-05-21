@@ -1,0 +1,73 @@
+.list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.list-db {
+    width: 81%;
+    height: 1280px;
+    background-color: rgba(0,0,0,0.1);
+}
+
+.list-db-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.list-db-title {
+    font-size: 32px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.list-db-list-item {
+    width: 50%;
+    height: 75px;
+    background-color: #64B986;
+    border: 1px solid darkgreen;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+.list-db-list-content {
+    width: 90%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.list-db-item-label {
+    width: 35%;
+    color: white;
+    text-shadow: 1px 1px black;
+    font-weight: bold;
+    font-size: 24px;
+    text-align: left;
+}
+
+.list-db-item-btn {
+    width: 30%;
+    height: 100%;
+    border: 5px solid rgba(251,166,0,1);
+    color: black;
+    font-weight: bold;
+}
+
+.list-db-item-options {
+    width: 60%;
+    height: 65%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
