@@ -1,0 +1,75 @@
+.recipe-view {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.recipe-view-container {
+    width: 80%;
+    height: auto;
+    padding-top: 30px;
+    padding-bottom: 20px;
+    padding: 4% 1% 3% 1%;
+    background-color: #64B986;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.recipe-view-row {
+    width: 95%;
+    height: 60px;
+    padding: 10px 10px 10px 10px;
+    background-color: rgba(255,255,255,1);
+    border: 2px solid black;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.recipe-view-column {
+    width: 95%;
+    padding: 10px 10px 10px 10px;
+    background-color: rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.recipe-view-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.recipe-view-list-container {
+    width: 98%;
+    background-color: white;
+    border: 2px solid black;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+.recipe-view-grain, .recipe-view-hop, .recipe-view-yeast{
+    width: 60%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+

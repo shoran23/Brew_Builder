@@ -90,12 +90,171 @@ class StyleDetails extends React.Component {
         )
     }
 }
+class StyleForm extends React.Component {
+    render() {
+        return (
+            <div className='form-background'>
+                <div className='form'>
+                    <div className='form-data'>
+                        <div className='form-data-title'>Add Style</div>
+                        <div className='form-data-row'>
+                            <div className='form-data-label'>Name</div>
+                            <input 
+                                className='form-data-input'
+                                type="text"
+                                name='name'
+                                id='name'
+                                value={this.props.name}
+                                onChange={this.props.handleChange}
+                            />     
+                        </div>
+                        <div className='form-data-column'>
+                            <div className='form-data-label'>Overview</div>
+                            <input
+                                className='form-data-input'
+                                type="text"
+                                name='overview'
+                                id='overview'
+                                value={this.props.overview}
+                                onChange={this.props.handleChange}
+                            />
+                        </div>
+                        <div className='form-data-row'>
+                            <div className='form-data-label'>IBU Range</div>
+                            <div className='form-data-row'>
+                                <input 
+                                    className='form-data-input'
+                                    type="number"
+                                    name='ibu_low'
+                                    id='ibu_low'
+                                    value={this.props.ibu_low}
+                                    onChange={this.props.handleChange}
+                                />
+                                <input
+                                    className='form-data-input' 
+                                    type="number"
+                                    name='ibu_high'
+                                    id='ibu_high'
+                                    value={this.props.ibu_high}
+                                    onChange={this.props.handleChange}
+                                />
+                            </div>
+                        </div>
+                        <div className='form-data-row'>
+                            <div className='form-data-label'>Color Range (SRM)</div>
+                            <div className='form-data-row'>
+                                <input
+                                    className='form-data-input' 
+                                    type="number"
+                                    name='srm_low'
+                                    id='srm_low'
+                                    value={this.props.srm_low}
+                                    onChange={this.props.handleChange}
+                                />
+                                <input
+                                    className='form-data-input' 
+                                    type="number"
+                                    name='srm_high'
+                                    id='srm_high'
+                                    value={this.props.srm_high}
+                                    onChange={this.props.handleChange}
+                                />
+                            </div>
+                        </div>
+                        <div className='form-data-row'>
+                            <div className='form-data-label'>Original Gravity Range</div>
+                            <div className='form-data-row'>
+                                <input
+                                    className='form-data-input' 
+                                    type="number"
+                                    name='og_low'
+                                    id='og_low'
+                                    value={this.props.og_low}
+                                    onChange={this.props.handleChange}
+                                />
+                                <input
+                                    className='form-data-input' 
+                                    type="number"
+                                    name='og_high'
+                                    id='og_high'
+                                    value={this.props.og_high}
+                                    onChange={this.props.handleChange}
+                                />
+                            </div>
+                        </div>   
+                        <div className='form-data-row'>
+                            <div className='form-data-label'>Final Gravity Range</div>
+                            <div className='form-data-row'>
+                                <input
+                                    className='form-data-input' 
+                                    type="number"
+                                    name='fg_low'
+                                    id='fg_low'
+                                    value={this.props.fg_low}
+                                    onChange={this.props.handleChange}
+                                />
+                                <input 
+                                    className='form-data-input'
+                                    type="number"
+                                    name='fg_high'
+                                    id='fg_high'
+                                    value={this.props.fg_high}
+                                    onChange={this.props.handleChange}
+                                />
+                            </div>
+                        </div>    
+                        <div className='form-data-row'>
+                            <div className='form-data-label'>Alcohol By Volume Range</div>
+                            <div className='form-data-row'>
+                                <input
+                                    className='form-data-input' 
+                                    type="number"
+                                    name='alc_by_vol_low'
+                                    id='alc_by_vol_low'
+                                    value={this.props.alc_by_vol_low}
+                                    onChange={this.props.handleChange}
+                                />
+                                <input 
+                                    className='form-data-input'
+                                    type="number"
+                                    name='alc_by_vol_high'
+                                    id='alc_by_vol_high'
+                                    value={this.props.alc_by_vol_high}
+                                    onChange={this.props.handleChange}
+                                />
+                            </div>
+                        </div>
+                        <div className='form-data-option'>
+                            <button className='form-data-option-save' onClick={() => {this.props.addStyle()}}>Save</button>
+                            <button className='form-data-option-cancel' onClick={() => {this.props.handleFormView(false)}}>Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+}
+
+
 class StyleGuide extends React.Component {
     state = {
         styles: [],
         currentStyle: {},
         showDetail: false,
-        srmColorRange: []
+        showForm: false,
+        srmColorRange: [],
+        name: "",
+        overview: "",
+        ibu_low: 0,
+        ibu_high: 0,
+        srm_low: 0,
+        srm_high: 0,
+        og_low: 0,
+        og_high: 0,
+        fg_low: 0,
+        fg_high: 0,
+        alc_by_vol_low: 0,
+        alc_by_vol_high: 0
     }
     getStyleList = () => {
         fetch('http://localhost:3000/styles')
@@ -106,6 +265,9 @@ class StyleGuide extends React.Component {
     }
     handleDetailView = state => {
         this.setState({showDetail: state})
+    }
+    handleFormView = state => {
+        this.setState({showForm: state})
     }
     getStyleDetails = id => {
         fetch(`http://localhost:3000/styles/${id}`)
@@ -123,11 +285,58 @@ class StyleGuide extends React.Component {
             }})
             setTimeout(this.getStyleList,100)
     }
+    clearFormStates = () => {
+        this.setState({name: ""})
+        this.setState({overview: ""})
+        this.setState({ibu_low: 0})
+        this.setState({ibu_high: 0})
+        this.setState({srm_low: 0})
+        this.setState({srm_high: 0})
+        this.setState({og_low: 0})
+        this.setState({og_high: 0})
+        this.setState({fg_low: 0})
+        this.setState({fg_high: 0})
+        this.setState({alc_by_vol_low: 0})
+        this.setState({alc_by_vol_high: 0})
+    }
+    addStyle = () => {
+        fetch('http://localhost:3000/styles', {
+            method: 'POST',
+            body: JSON.stringify({
+                name: this.state.name,
+                overview: this.state.overview,
+                ibu_low: this.state.ibu_low,
+                ibu_high: this.state.ibu_high,
+                srm_low: this.state.srm_low,
+                srm_high: this.state.srm_high,
+                og_low: this.state.og_low,
+                og_high: this.state.og_high,
+                fg_low: this.state.fg_low,
+                fg_high: this.state.fg_high,
+                alc_by_vol_low: this.state.alc_by_vol_low,
+                alc_by_vol_high: this.state.alc_by_vol_high
+            }),
+            headers: {'Content-Type' : 'application/json'}
+        }).then(res => res.json())
+        .then(resJson => {
+            console.log('add styles response: ',resJson)
+        })
+        setTimeout(this.getStyleList,100)
+        setTimeout(this.handleFormView(false),300)
+    }
+    handleChange = event => {
+        this.setState({
+            [event.target.id]: event.target.value
+        })
+    }
     render() {
         return (
             <div className='list'>
                 <div className='list-db'>
-                    <div className='list-db-title'>Style Guide</div>
+                    <div className='list-db-header'>
+                        <div className='list-db-title'>Style Guide</div>
+                        <button className='list-db-add' onClick={() => {this.handleFormView(true)}}>Add Style</button>
+                    </div>
                     { this.state.styles.length > 0 ? 
                         <div className='list-db-list'>
                             {this.state.styles.map(style => (
@@ -147,6 +356,28 @@ class StyleGuide extends React.Component {
                             style={this.state.currentStyle}
                             handleDetailView={this.handleDetailView}
                             srmColors={this.props.srmColors}
+                        />
+                    :
+                        <div></div>
+                    }
+                    {this.state.showForm ?
+                        <StyleForm
+                            style={this.state.currentStyle}
+                            handleChange={this.handleChange}
+                            handleFormView={this.handleFormView}
+                            addStyle={this.addStyle}
+                            name={this.state.name}
+                            overview={this.state.overview}
+                            ibu_low={this.state.ibu_low}
+                            ibu_high={this.state.ibu_high}
+                            srm_low={this.state.srm_low}
+                            srm_high={this.state.srm_high}
+                            og_low={this.state.og_low}
+                            og_high={this.state.og_high}
+                            fg_low={this.state.fg_low}
+                            fg_high={this.state.fg_high}
+                            alc_by_vol_low={this.state.alc_by_vol_low}
+                            alc_by_vol_high={this.state.alc_by_vol_high}
                         />
                     :
                         <div></div>

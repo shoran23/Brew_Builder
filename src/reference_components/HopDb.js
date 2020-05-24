@@ -66,14 +66,15 @@ class HopForm extends React.Component {
             <div className='form-background'>
                 <div className='form'>
                     <div className='form-data'>
+                        <div className='form-data-title'>Add Hop</div>
                         <div className='form-data-row'>
                             <div className='form-data-label'>Name</div>
                             <input 
                                 className='form-data-input'
                                 type="text" 
-                                name="hopName" 
-                                id="hopName"
-                                value={this.props.hopName}
+                                name="name" 
+                                id="name"
+                                value={this.props.name}
                                 onChange={this.props.handleChange}
                             />
                         </div>
@@ -82,9 +83,9 @@ class HopForm extends React.Component {
                             <input 
                                 className="form-data-input"
                                 type="text"
-                                name="hopOrigin"
-                                id="hopOrigin"
-                                value={this.props.hopOrigin}
+                                name="origin"
+                                id="origin"
+                                value={this.props.origin}
                                 onChange={this.props.handleChange}
                             />
                         </div>
@@ -93,9 +94,9 @@ class HopForm extends React.Component {
                             <input 
                                 className="form-data-input"
                                 type="text"
-                                name="hopType"
-                                id="hopType"
-                                value={this.props.hopType}
+                                name="hop_type"
+                                id="hop_type"
+                                value={this.props.hop_type}
                                 onChange={this.props.handleChange}
                             />
                         </div>
@@ -104,9 +105,9 @@ class HopForm extends React.Component {
                             <input 
                                 className="form-data-input"
                                 type="text"
-                                name="hopAlpha"
-                                id="hopAlpha"
-                                value={this.props.hopAlpha}
+                                name="alpha"
+                                id="alpha"
+                                value={this.props.alpha}
                                 onChange={this.props.handleChange}
                             />
                         </div>
@@ -115,9 +116,9 @@ class HopForm extends React.Component {
                             <input 
                                 className="form-data-input"
                                 type="text"
-                                name="hopBeta"
-                                id="hopBeta"
-                                value={this.props.hopBeta}
+                                name="beta"
+                                id="beta"
+                                value={this.props.beta}
                                 onChange={this.props.handleChange}
                             />
                         </div>
@@ -126,9 +127,9 @@ class HopForm extends React.Component {
                             <input 
                                 className="form-data-input"
                                 type="text"
-                                name="hopNotes"
-                                id="hopNotes"
-                                value={this.props.hopNotes}
+                                name="notes"
+                                id="notes"
+                                value={this.props.notes}
                                 onChange={this.props.handleChange}
                             />
                         </div>
@@ -148,11 +149,12 @@ class HopDb extends React.Component {
         currentHop: {},
         showDetail: false,
         showForm: false,
-        hopName: '',
-        hopOrigin: '',
-        hopAlpha: 0,
-        hopBeta: 0,
-        hopNotes: ''
+        name: '',
+        hop_type: '',
+        origin: '',
+        alpha: 0,
+        beta: 0,
+        notes: ''
     }
     getHopList = () => {
         fetch('http://localhost:3000/hops')
@@ -182,6 +184,34 @@ class HopDb extends React.Component {
                 'Content-Type' : 'application/json'
             }})
             setTimeout(this.getHopList,100)
+    }
+    clearFormStates = () => {
+        this.setState({name: ""})
+        this.setState({origin: ""})
+        this.setState({hop_type: false})
+        this.setState({alpha: 0})
+        this.setState({beta: 0})
+        this.setState({notes: ""})
+    }
+    addHop = () => {
+        fetch('http://localhost:3000/hops', {
+            method: 'POST',
+            body: JSON.stringify({
+                name: this.state.name,
+                origin: this.state.origin,
+                hop_type: this.state.hop_type,
+                alpha: this.state.alpha,
+                beta: this.state.beta,
+                notes: this.state.notes
+            }),
+            headers: {'Content-Type' : 'application/json'}
+        }).then(res => res.json())
+        .then(resJson => {
+            console.log('add hop response: ',resJson)
+        })
+        setTimeout(this.getHopList,300)
+        setTimeout(() => this.handleFormView(false),400)
+        setTimeout(this.clearFormStates,500)
     }
     handleChange = event => {
         console.log('handle change')
@@ -225,11 +255,11 @@ class HopDb extends React.Component {
                             handleFormView={this.handleFormView}
                             handleChange={this.handleChange}
                             addHop={this.addHop}
-                            hopName={this.state.hopName}
-                            hopOrigin={this.state.hopOrigin}
-                            hopAlpha={this.state.hopAlpha}
-                            hopBeta={this.state.hopBeta}
-                            hopNotes={this.state.hopNotes}
+                            name={this.state.name}
+                            origin={this.state.origin}
+                            alpha={this.state.alpha}
+                            beta={this.state.beta}
+                            notes={this.state.notes}
                         />
                     :
                         <div></div>

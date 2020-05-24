@@ -50,7 +50,9 @@ class App extends React.Component {
                 srmColors={this.state.srmColors}
               />
             :
-              <RecipeDb/>
+              <RecipeDb
+                srmColors={this.state.srmColors}
+              />
             }
           </div>
         }

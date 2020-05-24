@@ -89,6 +89,7 @@ class MaltForm extends React.Component {
             <div className='form-background'>
                 <div className='form'>
                     <div className='form-data'>
+                        <div className='form-data-title'>Add Malt</div>
                         <div className='form-data-row'>
                             <div className='form-data-label'>Name</div>
                             <input 
@@ -191,6 +192,7 @@ class MaltDb extends React.Component {
         showDetail: false,
         showForm: false,
         name: "",
+        origin: "",
         mash: false,
         color: 0,
         power: 0,
@@ -230,11 +232,28 @@ class MaltDb extends React.Component {
             }})
             setTimeout(this.getMaltList,100)   
     }
+    clearFormStates = () => {
+        this.setState({name: ""})
+        this.setState({origin: ""})
+        this.setState({mash: false})
+        this.setState({color: 0})
+        this.setState({power: 0})
+        this.setState({potential: 0})
+        this.setState({max: 0})
+        this.setState({notes: ""})
+    }
     addMalt = () => {
         fetch('http://localhost:3000/grains', {
             method: 'POST',
             body: JSON.stringify({
-                name: this.state.name
+                name: this.state.name,
+                origin: this.state.origin,
+                mash: this.state.mash,
+                color: this.state.color,
+                power: this.state.power,
+                potential: this.state.potential,
+                max: this.state.max,
+                notes: this.state.notes
             }),
             headers: {'Content-Type' : 'application/json'}
         }).then(res => res.json())
@@ -243,6 +262,8 @@ class MaltDb extends React.Component {
         })
         setTimeout(this.getMaltList,100)
         setTimeout(this.handleFormView(false),300)
+        setTimeout(this.clearFormStates,400)
+
     }
     handleChange = event => {
         this.setState({
@@ -287,6 +308,7 @@ class MaltDb extends React.Component {
                             handleFormView={this.handleFormView}
                             addMalt={this.addMalt}
                             name={this.state.name}
+                            origin={this.state.origin}
                             mash={this.state.mash}
                             color={this.state.color}
                             power={this.state.power}

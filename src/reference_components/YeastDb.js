@@ -73,6 +73,7 @@ class YeastForm extends React.Component {
             <div className='form-background'>
                 <div className='form'>
                     <div className='form-data'>
+                        <div className='form-data-title'>Add Yeast</div>
                         <div className='form-data-row'>
                             <div className='form-data-label'>Name</div>
                             <input 
@@ -84,14 +85,25 @@ class YeastForm extends React.Component {
                                 onChange={this.props.handleChange}
                             />
                         </div>
+
+                        <div className='form-data-row'>
+                            <div className='form-data-label'>Lab</div>
+                            <input 
+                                type="text"
+                                name="lab"
+                                id="lab"
+                                value={this.props.lab}
+                                onChange={this.props.handleChange}    
+                            />
+                        </div>
                         <div className='form-data-row'>
                             <div className='form-data-label'>Type</div>
                             <input 
                                 className="form-data-input"
                                 type="text"
-                                name="type"
-                                id="type"
-                                value={this.props.type}
+                                name="yeast_type"
+                                id="yeast_type"
+                                value={this.props.yeast_type}
                                 onChange={this.props.handleChange}
                             />
                         </div>
@@ -175,8 +187,9 @@ class YeastDb extends React.Component {
         yeasts: [],
         currentYeast: {},
         showDetail: false,
+        name: "",
         lab: "",
-        type: "",
+        yeast_type: "",
         form: "",
         temp_low: 0,
         temp_high: 0,
@@ -217,7 +230,15 @@ class YeastDb extends React.Component {
         fetch('http://localhost:3000/yeasts', {
             method: 'POST',
             body: JSON.stringify({
-                name: this.state.name
+                name: this.state.name,
+                lab: this.state.lab,
+                yeast_type: this.state.yeast_type,
+                form: this.state.form,
+                temp_low: this.state.temp_low,
+                temp_high: this.state.temp_high,
+                attenuation: this.state.attenuation,
+                flocculation: this.state.flocculation,
+                notes: this.state.notes
             }),
             headers: {'Content-Type' : 'application/json'}
         }).then(res => res.json())
@@ -269,7 +290,8 @@ class YeastDb extends React.Component {
                             handleChange={this.handleChange}
                             addYeast={this.addYeast}
                             name={this.state.name}
-                            type={this.state.type}
+                            lab={this.state.lab}
+                            yeast_type={this.state.yeast_type}
                             form={this.state.form}
                             temp_low={this.state.temp_low}
                             temp_high={this.state.temp_high}
