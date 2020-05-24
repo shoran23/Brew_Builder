@@ -13,14 +13,11 @@ class AvbCalc extends React.Component {
         let roundedResult = result.toFixed(2)
         this.setState({avbResult: roundedResult})
     }
-
     calculateAttenuation = () => {
         let result = (((this.state.originalGravity - 1) - (this.state.finalGravity - 1)) / (this.state.originalGravity -1)) * 100
         let roundedResult = result.toFixed(0)
         this.setState({attenuationResult: roundedResult})
     }
-
-
     handleChange = event => {
         this.setState({
           [event.target.id]: event.target.value

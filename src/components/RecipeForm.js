@@ -1,58 +1,9 @@
 import React from 'react'
 import Select from 'react-select'
+import Malt from './Malt.js'
+import Hop from './Hop.js'
+import Yeast from './Yeast.js'
 import '../css/recipe-form.css'
-
-
-class Malt extends React.Component {
-    handleSelectChange = e => {
-        this.props.handleRecipeState(this.props.recipeMaltList,e,this.props.index)
-    }
-    // handleAmountChange = e => {
-    //     this.props.handleRecipeState(this.props.recipeMaltAmounts,e,this.props.index)
-    // }
-    handlePercentChange = e => {
-        this.props.handleRecipeState(this.props.recipeMaltPercentages,e,this.props.index)
-    }
-    render() {
-        return (
-            <div className='recipe-form-data-row'>
-                <div className='recipe-form-data-column'>
-                    <div className='recipe-form-data-label'>Amount</div>
-                    <input 
-                        type="decimal"
-                        name='recipeMaltAmounts'
-                        id='recipeMaltAmounts'
-                        value={this.props.recipeMaltAmounts[this.props.index]}
-                        onChange={() => this.props.handleRecipeState(this.props.recipeMaltAmounts,this.props.recipeMaltAmounts[this.props.index],this.props.index)}
-
-                    />
-                </div>
-                <div className='recipe-form-data-column'>
-                    <div className='recipe-form-data-label'>Percentage</div>
-                    <input 
-                        type="decimal"
-                        name='recipeMaltPercentages'
-                        id='recipeMaltPercentages'
-                        value={this.props.recipeMaltPercentages[this.props.index]}
-                        onChange={this.handlePercentChange}
-                    />
-                </div>
-                <div className='recipe-form-data-column'>
-                    <div className='recipe-form-data-label'>Select Grain</div>
-                    <Select
-                        value={this.props.recipeMaltList[this.props.index]}
-                        onChange={this.handleSelectChange}
-                        options={this.props.maltList}
-                    />
-                </div>
-                <div className='recipe-form-data-column'>
-                    <button>View</button>
-                    <button onClick={() => this.props.changeMaltArraySize('subtract')}>Delete</button>
-                </div>
-            </div>
-        )
-    }
-}
 
 class RecipeForm extends React.Component {
     state = {
@@ -75,6 +26,13 @@ class RecipeForm extends React.Component {
         recipeMaltList: [{}],
         recipeMaltAmounts: [1],
         recipeMaltPercentages: [2],
+
+        recipeHopList: [{}],
+        recipeHopAmounts: [1],
+        recipeHopTimes: [60],
+
+        recipeYeastList: [{}],
+        recipeYeastAmounts: [1]
     }
     /* GET INGREDIENTS FROM THE DATABASE **************************************************************/
     getStyleList = () => {
@@ -111,14 +69,30 @@ class RecipeForm extends React.Component {
         fetch('http://localhost:3000/hops')
             .then(data => data.json(), err => console.log(err))
             .then(parsedData => {
-                this.setState({hopList: parsedData})
+                const dataArr = []
+                for(let i=0;i<parsedData.length;i++){
+                    let listEntry = {
+                        label: parsedData[i].name,
+                        value: parsedData[i]
+                    }
+                    dataArr.push(listEntry)
+                }
+                this.setState({hopList: dataArr})
             })
     }
     getYeastList = () => {
         fetch('http://localhost:3000/yeasts')
             .then(data => data.json(), err => console.log(err))
             .then(parsedData => {
-                this.setState({yeastList: parsedData})
+                const dataArr = []
+                for(let i=0;i<parsedData.length;i++){
+                    let listEntry = {
+                        label: parsedData[i].name,
+                        value: parsedData[i]
+                    }
+                    dataArr.push(listEntry)
+                }
+                this.setState({yeastList: dataArr})
             })
     }
     handleChange = event => {
@@ -135,8 +109,8 @@ class RecipeForm extends React.Component {
     handleSelectStyle = selectedOption => {
         this.setState({selectedStyle: selectedOption})
     }
-    /* Handle Recipe Malt Content *******************************************************************/ 
-    changeMaltArraySize = (action) => {
+    /* Handle Recipe Content ***********************************************************************/ 
+    changeMaltArraySize = (action,index) => {
         let maltListArr = this.state.recipeMaltList
         let maltAmountArr = this.state.recipeMaltAmounts
         let maltPercentagesArr = this.state.recipeMaltPercentages
@@ -145,22 +119,55 @@ class RecipeForm extends React.Component {
             maltAmountArr.push(0)
             maltPercentagesArr.push(0)
 
-        } else if(action === 'subtract'){
-            maltListArr.pop()
-            maltAmountArr.pop()
-            maltPercentagesArr.pop()
+        } else if(action === 'delete'){
+            if(this.state.recipeMaltList.length > 1){
+                maltListArr.splice(index,1)
+                maltAmountArr.splice(index,1)
+                maltPercentagesArr.splice(index,1)
+            }
         }
         this.setState({recipeMaltList: maltListArr})
         this.setState({recipeMaltAmounts: maltAmountArr})
         this.setState({recipeMaltPercentages: maltPercentagesArr})
     }
-
-
+    changeHopArraySize = (action,index) => {
+        let hopListArr = this.state.recipeHopList
+        let hopAmountArr = this.state.recipeHopAmounts
+        let hopTimeArr = this.state.recipeHopTimes
+        if(action === 'add'){
+            hopListArr.push({})
+            hopAmountArr.push(0)
+            hopTimeArr.push(0)
+        } else if(action === 'delete'){
+            if(this.state.recipeHopList.length > 1){
+                hopListArr.splice(index,1)
+                hopAmountArr.splice(index,1)
+                hopTimeArr.splice(index,1)
+            }
+        }
+        this.setState({recipeHopList: hopListArr})
+        this.setState({recipeHopAmounts: hopAmountArr})
+        this.setState({recipeHopTimes: hopTimeArr})
+    }
+    changeYeastArraySize = (action,index) => {
+        let yeastListArr = this.state.recipeYeastList
+        let yeastAmountArr = this.state.recipeHopAmounts
+        if(action === 'add'){
+            yeastListArr.push({})
+            yeastAmountArr.push(0)
+        } else if(action === 'delete'){
+            if(this.state.recipeYeastList.length > 1){
+                yeastListArr.splice(index,1)
+                yeastAmountArr.splice(index,1)
+            }
+        }
+        this.setState({recipeYeastList: yeastListArr})
+        this.setState({recipeYeastAmounts: yeastAmountArr})
+    }
+    /* RECIPE CALCULATIONS ****************************************************************************/
     render() {
 
-        console.log('Recipe Malt List: ',this.state.recipeMaltList)
-        console.log('Recipe Malt Amounts: ', this.state.recipeMaltAmounts)
-        console.log('Recipe Malt Percentages', this.state.recipeMaltPercentages)
+        console.log(this.state.recipeHopAmounts)
 
         return (
             <div className='recipe-form'>
@@ -298,16 +305,16 @@ class RecipeForm extends React.Component {
                     {/* ROW 4 GRAIN BILL *************************************************************/}
                     <div className='recipe-form-data-column'>
                         <div className='recipe-form-data-subtitle'>Grain Bill</div>
-                        <button onClick={() => this.changeMaltArraySize('add')}>Add</button>
+                        <button onClick={() => this.changeMaltArraySize('add',0)}>Add</button>
                         <div className='recipe-form-data-column'>
                             {this.state.recipeMaltList.map((malt,index) => (
                                 <Malt 
                                     key={index}
                                     maltList={this.state.maltList}
                                     changeMaltArraySize={this.changeMaltArraySize}
-                                    recipeMaltList={this.state.recipeMaltList}
                                     index={index}
                                     handleRecipeState={this.handleRecipeState}
+                                    handleChange={this.handleChange}
 
                                     recipeMaltList={this.state.recipeMaltList}
                                     recipeMaltAmounts={this.state.recipeMaltAmounts}
@@ -316,6 +323,48 @@ class RecipeForm extends React.Component {
                                 />
                             ))}
                         </div>
+                    </div>
+                    {/* ROW 5 HOP SCHEDULE ***********************************************************/}
+                    <div className='recipe-form-data-column'>
+                        <div className='reipce-form-data-subtitle'>Hop Schedule</div>
+                        <button onClick={() => this.changeHopArraySize('add',0)}>Add</button>
+                        <div className='recipe-form-data-column'>
+                            {this.state.recipeHopList.map((hop,index) => (
+                                <Hop
+                                    key={index}
+                                    hopList={this.state.hopList}
+                                    changeHopArraySize={this.changeHopArraySize}
+                                    index={index}
+                                    handleRecipeState={this.handleRecipeState}
+                                    handleChange={this.handleChange}
+                                    handleIndexedChange={this.handleIndexedChange}
+
+                                    recipeHopList={this.state.recipeHopList}
+                                    recipeHopAmounts={this.state.recipeHopAmounts}
+                                    recipeHopTimes={this.state.recipeHopTimes}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                    <div className='recipe-form-data-column'>
+                        <div className='recipe-form-data-subtitle'>Yeast</div>
+                        <button onClick={() => this.changeYeastArraySize('add',0)}>Add</button>
+                        <div className='recipe-form-data-column'>
+                            {this.state.recipeYeastList.map((yeast,index) => (
+                                <Yeast 
+                                    key={index}
+                                    yeastList={this.state.yeastList}
+                                    changeYeastArraySize={this.changeYeastArraySize}
+                                    index={index}
+                                    handleRecipeState={this.handleRecipeState}
+                                    handleChange={this.handleChange}
+
+                                    recipeYeastList={this.state.recipeYeastList}
+                                    recipeYeastAmounts={this.state.recipeYeastAmounts}
+                                />
+                            ))}
+                        </div>
+
                     </div>
                 </div>
             </div>
