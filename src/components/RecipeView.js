@@ -52,8 +52,12 @@ class RecipeView extends React.Component {
                 </div>
                 <div className='recipe-view-container'>
                     <div className='recipe-view-label'>Recipe Parameters</div>
-                    <div className='recipe-view-row'>        
-                        <div className='recipe-view-item'>~this.state.style.name~</div>
+                    <div className='recipe-view-row'>    
+                        {this.props.styleList.length ?
+                            <div className='recipe-view-item'>{this.props.styleList[0].name}</div>
+                        :
+                            <div className='recipe-view-item'>Retrieving Style</div>
+                        }    
                         <div className='recipe-view-item'>Volume {this.state.recipe.volume}</div>
                         <div className='recipe-view-item'>Efficiency {this.state.recipe.efficiency}</div>
                     </div>

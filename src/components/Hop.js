@@ -9,13 +9,13 @@ class Hop extends React.Component {
     handleSelectChange = e => {
         this.props.handleRecipeState(this.props.recipeHopList,e,this.props.index)
     }
-    handleChangeLocal = (event,remoteState,index) => {
+    handleChangeAmount = (event,index) => {
         this.setState({
           [event.target.id]: event.target.value
         })
-        let tempArray = remoteState
-        tempArray[index] = [event.target.value]
-        this.setState({remoteState: tempArray})
+
+        // set recipe hop amount function here with the value above
+
     } 
     render() {
         return (
@@ -27,7 +27,7 @@ class Hop extends React.Component {
                         name='hopAmount'
                         id='hopAmount'
                         value={this.state.hopAmount}
-                        onChange={() => this.handleChangeLocal(this.props.recipeHopAmounts,this.props.index)}
+                        onChange={() => this.handleChangeLocal(this.props.index)}
                     />
                 </div>
                 <div className='recipe-form-data-column'>

@@ -22,7 +22,7 @@ class Yeast extends React.Component {
                     <div className='recipe-form-data-label'>Select Yeast</div>
                     <Select 
                         value={this.props.recipeYeastList[this.props.index]}
-                        onChange={this.handlSelectChange}
+                        onChange={this.handleSelectChange}
                         options={this.props.yeastList}
                     />
                 </div>

@@ -14,7 +14,7 @@ class Recipe extends React.Component {
                     <div className='list-db-item-options'>
                         <button className='list-db-item-btn' onClick={() => this.props.viewRecipe(this.props.recipe.id)}>View</button>
                         <button className='list-db-item-btn' onClick={() => this.props.handlePage('edit')}>Edit</button>
-                        <button className='list-db-item-btn'>Delete</button>
+                        <button className='list-db-item-btn' onClick={() => this.props.deleteReceipe(this.props.recipe.id)}>Delete</button>
                     </div>
                 </div>
             </div>
@@ -29,6 +29,8 @@ class RecipeDb extends React.Component {
         showForm: false,
         recipes: [],
         currentRecipe: {},
+        recipeStyleLedgers: [],
+        currentStyleList: [],
         currentGrainList: [],
         recipeGrainLedgers: [],
         currentHopList: [],
@@ -36,12 +38,52 @@ class RecipeDb extends React.Component {
         currentYeastList: [],
         recipeYeastLedgers: []
     }
-    /* Get Recipe List ****************************************************************************/ 
+    /* Recipe DB **********************************************************************************/ 
     getRecipeList = () => {
         fetch('http://localhost:3000/recipes')
             .then(data => data.json(), err => console.log(err))
             .then(parsedData => {
                 this.setState({recipes: parsedData})
+            })
+    } 
+    /* Recipe Style *******************************************************************************/
+    sortRecipeStyle = (ledgerArr,styleArr) => {
+        let sortedStyles = []
+        for(let ledgerIndex=0;ledgerIndex<ledgerArr.length;ledgerIndex++){
+            for(let styleIndex=0;styleIndex<styleArr.length;styleIndex++){
+                if(styleArr[styleIndex].id === ledgerArr[ledgerIndex].style_id){
+                    sortedStyles.push(styleArr[styleIndex])
+                    break;
+                }
+            }
+        }
+        this.setState({currentStyleList: sortedStyles})
+    }
+    getRecipeStyle = arr => {
+        let styleArr = []
+        for(let i=0;i<arr.length;i++){
+            fetch(`http://localhost:3000/styles/${arr[i].style_id}`)
+                .then(data => data.json(), err => console.log(err))
+                .then(parsedData => {
+                    styleArr.push(parsedData)
+                })
+        }
+        setTimeout(() => this.sortRecipeStyle(arr,styleArr),500)
+    }
+    getRecipeStyleLedgers = id => {
+        fetch('http://localhost:3000/recipe_style_ledgers')
+            .then(data => data.json(), err => console.log(err))
+            .then(parsedData => {
+                console.log('Recipe Style Ledgers Fetch: ',parsedData)
+                let recipeStyleLedgerArr = []
+                for(let i=0;i<parsedData.length;i++){
+                    if(parsedData[i].recipe_id === id){
+                        recipeStyleLedgerArr.push(parsedData[i])
+                        break;
+                    }
+                }
+                this.setState({recipeStyleLedgers: recipeStyleLedgerArr})
+                this.getRecipeStyle(recipeStyleLedgerArr)
             })
     }
     /* Recipe Grains ******************************************************************************/
@@ -158,6 +200,32 @@ class RecipeDb extends React.Component {
                 this.getRecipeYeast(recipeYeastLedgerArr)
             })
     }
+    /* DELETE RECIPES *************************************************************************************************************/
+    deleteRecipeLedgers = (id,whichLedger) => {
+        fetch(`http://localhost:3000/recipe_${whichLedger}_ledgers`)
+            .then(res => res.json())
+            .then(resJson => {
+                for(let i=0;i<resJson.length;i++){
+                    if(resJson[i].recipe_id === id){
+                        fetch(`http://localhost:3000/recipe_${whichLedger}_ledgers/${resJson[i].id}`, {
+                            method: 'DELETE',
+                            headers: {'Content-Type' : 'application/json'}
+                        }).then(res => console.log(res))
+                    }
+                }
+            })
+        setTimeout(this.getRecipeList,500) 
+    }
+    deleteReceipe = id => {
+        fetch(`http://localhost:3000/recipes/${id}`, {
+            method: 'DELETE',
+            headers: {'Content-Type' : 'application/json'}
+        })
+        this.deleteRecipeLedgers(id,'style')
+        this.deleteRecipeLedgers(id,'grain')
+        this.deleteRecipeLedgers(id,'hop')
+        this.deleteRecipeLedgers(id,'yeast')
+    }
     handlePage = state => {
         if(state === 'list'){
             this.setState({showList: true})
@@ -183,10 +251,11 @@ class RecipeDb extends React.Component {
             }
         }
         this.setState({currentRecipe: currentRecipe})
+        this.getRecipeStyleLedgers(id)
         this.getRecipeGrainLedgers(id)
         this.getRecipeHopLedgers(id)   
         this.getRecipeYeastLedgers(id)
-        setTimeout(() => this.handlePage('view'),500)
+        setTimeout(() => this.handlePage('view'),1000)
     }
     render() {
         return (
@@ -206,6 +275,7 @@ class RecipeDb extends React.Component {
                                             recipe={recipe}
                                             handlePage={this.handlePage}
                                             viewRecipe={this.viewRecipe}
+                                            deleteReceipe={this.deleteReceipe}
                                         />
                                     ))}
                                 </div>
@@ -214,9 +284,11 @@ class RecipeDb extends React.Component {
                                     {this.state.viewItem ?
                                         <RecipeView 
                                             recipe={this.state.currentRecipe}
+                                            styleList={this.state.currentStyleList}
                                             grainList={this.state.currentGrainList}
                                             hopList={this.state.currentHopList}
                                             yeastList={this.state.currentYeastList}
+                                            recipeStyleLedgers={this.state.recipeStyleLedgers}
                                             recipeGrainLedgers={this.state.recipeGrainLedgers}
                                             recipeHopLedgers={this.state.recipeHopLedgers}
                                             recipeYeastLedgers={this.state.recipeYeastLedgers}
@@ -226,6 +298,7 @@ class RecipeDb extends React.Component {
                                             { !this.state.editItem ?
                                                 <RecipeForm 
                                                     srmColors={this.props.srmColors}
+                                                    handlePage={this.handlePage}
                                                 />
                                             :
                                                 <h2>Edit Item</h2>

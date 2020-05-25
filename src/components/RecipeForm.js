@@ -23,6 +23,8 @@ class RecipeForm extends React.Component {
         ibu: 0,
         srm: 1,
 
+        currentRecipeId: 0,
+
         recipeMaltList: [{}],
         recipeMaltAmounts: [1],
         recipeMaltPercentages: [2],
@@ -31,8 +33,97 @@ class RecipeForm extends React.Component {
         recipeHopAmounts: [1],
         recipeHopTimes: [60],
 
-        recipeYeastList: [{}],
+        recipeYeastList: [{}], 
         recipeYeastAmounts: [1]
+    }
+    /* ADD RECIPE *************************************************************************************/
+    addYeastLedgers = () => {
+        for(let i=0;i<this.state.recipeYeastList.length;i++){
+            fetch('http://localhost:3000/recipe_yeast_ledgers', {
+                method: 'POST',
+                body: JSON.stringify({
+                    recipe_id: this.state.currentRecipeId,
+                    yeast_id: this.state.recipeYeastList[i].value.id,
+                    qty: this.state.recipeYeastAmounts[i]
+                }),
+                headers: {'Content-Type' : 'application/json'}
+            }).then(res => res.json())
+            .then(resJson => {
+                console.log('Add Recipe Yeast Ledger Resp: ',resJson)
+            })
+        }
+    }
+    addHopLedgers = () => {
+        for(let i=0;i<this.state.recipeHopList.length;i++){
+            fetch('http://localhost:3000/recipe_hop_ledgers', {
+                method: 'POST',
+                body: JSON.stringify({
+                    recipe_id: this.state.currentRecipeId,
+                    hop_id: this.state.recipeHopList[i].value.id,
+                    qty: this.state.recipeHopAmounts[i],
+                    time: this.state.recipeHopTimes[i]
+                }),
+                headers: {'Content-Type' : 'application/json'}
+            }).then(res => res.json())
+            .then(resJson => {
+                console.log('Add recipe hop ledger response: ',resJson)
+            })
+        }
+        setTimeout(this.addYeastLedgers,100)
+    }
+    addMaltLedgers = () => {
+        for(let i=0;i<this.state.recipeMaltList.length;i++){
+            fetch('http://localhost:3000/recipe_grain_ledgers', {
+                method: 'POST',
+                body: JSON.stringify({
+                    recipe_id: this.state.currentRecipeId,
+                    grain_id: this.state.recipeMaltList[i].value.id,
+                    qty: this.state.recipeMaltAmounts[i],
+                    percentage: this.state.recipeMaltPercentages[i]
+                }),
+                headers: {'Content-Type' : 'application/json'}
+            }).then(res => res.json())
+            .then(resJson => {
+                console.log('Add recipe grain ledger response: ',resJson)
+            })
+        }
+        setTimeout(this.addHopLedgers,100)
+    }
+    addStyleLedger = () => {
+        fetch('http://localhost:3000/recipe_style_ledgers', {
+            method: 'POST',
+            body: JSON.stringify({
+                recipe_id: this.state.currentRecipeId,
+                style_id: this.state.selectedStyle.value.id
+            }),
+            headers: {'Content-Type' : 'application/json'}
+        }).then(res => res.json())
+        .then(resJson => {
+            console.log('Add Recipe Style Ledger Res: ',resJson)
+        })
+        setTimeout(this.addMaltLedgers,100)
+    }
+    addRecipe = () => {
+        fetch('http://localhost:3000/recipes', {
+            method: 'POST',
+            body: JSON.stringify({
+                name: this.state.name,
+                description: this.state.description,
+                volume: this.state.volume,
+                efficiency: this.state.efficiency,
+                og: this.state.og,
+                fg: this.state.fg,
+                alc_by_vol: this.state.alc_by_vol,
+                ibu: this.state.ibu,
+                srm: this.state.srm
+            }),
+            headers: {'Content-Type' : 'application/json'}
+        }).then(res => res.json())
+        .then(resJson => {
+            console.log(resJson)
+            this.setState({currentRecipeId: resJson.id})
+        })
+        setTimeout(this.addStyleLedger,100)
     }
     /* GET INGREDIENTS FROM THE DATABASE **************************************************************/
     getStyleList = () => {
@@ -166,9 +257,6 @@ class RecipeForm extends React.Component {
     }
     /* RECIPE CALCULATIONS ****************************************************************************/
     render() {
-
-        console.log(this.state.recipeHopAmounts)
-
         return (
             <div className='recipe-form'>
                 <div className='recipe-form-data'>
@@ -366,6 +454,10 @@ class RecipeForm extends React.Component {
                         </div>
 
                     </div>
+                </div>
+                <div className='recipe-form-data-row'>
+                    <button onClick={this.addRecipe}>Save</button>
+                    <button onClick={() => this.props.handlePage('list')}>Cancel</button>
                 </div>
             </div>
         )
