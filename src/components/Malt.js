@@ -26,8 +26,8 @@ class Malt extends React.Component {
                     <div className='recipe-form-data-label'>Amount(lbs)</div>
                     <input 
                         type="number"
-                        name='recipeMaltAmounts'
-                        id='recipeMaltAmounts'
+                        name='maltAmount'
+                        id='maltAmount'
                         value={this.props.recipeMaltAmounts[this.props.index]}
                         onChange={this.handleChangeAmount}
 
@@ -37,8 +37,8 @@ class Malt extends React.Component {
                     <div className='recipe-form-data-label'>Percentage(%)</div>
                     <input 
                         type="number"
-                        name='recipeMaltPercentages'
-                        id='recipeMaltPercentages'
+                        name='maltPercentage'
+                        id='maltPercentage'
                         value={this.props.recipeMaltPercentages[this.props.index]}
                         onChange={this.handleChangePercentages}
                     />

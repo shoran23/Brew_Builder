@@ -197,9 +197,7 @@ class RecipeForm extends React.Component {
         let tempArray = state
         tempArray[index] = event
         this.setState({state: tempArray})
-
-
-        this.determineCalculations()
+        this.determineCalculations(state)
     }
     /* Handle Recipt Style **************************************************************************/
     handleSelectStyle = selectedOption => {
@@ -265,7 +263,6 @@ class RecipeForm extends React.Component {
         let recipeOG = (((totalGU / this.state.volume).toFixed(0)) / 1000) + 1
         this.setState({og: recipeOG})
     }
-
     calculateGrainBillFromAmountChange = () => {
         // add up the total malt amount
         let totalMaltAmount = 0
@@ -286,22 +283,39 @@ class RecipeForm extends React.Component {
         // determine proportional amounts
         for(let k=0;k<this.state.recipeMaltAmounts.length;k++){
             let maltGU = (((this.state.recipeMaltList[k].value.potential) - 1) * 1000).toFixed(0)
-            console.log('Malt GU: ',maltGU)
             let proportionalAmount = Number((maltGU * this.state.recipeMaltAmounts[k] * (this.state.efficiency / 100)).toFixed(0))
-            console.log('PA: ',proportionalAmount)
             totalGU += proportionalAmount;
         }
-        console.log('Total GU: ',totalGU)
         this.calculateOGWithTotalGU(totalGU)
-
+    }
+    calculateGrainBillFromOG = () => {
 
     }
-
-    determineCalculations = () => {
-        this.calculateGrainBillFromAmountChange()
+    calculateAVB = (og,fg) => {
+        let avb = ((og - fg) * 131.25).toFixed(2)
+        this.setState({avb})
     }
+    calculateFGFromYeastChange = () => {
+        let og = ((this.state.og - 1) * 1000).toFixed(0)
+        let attenuation = this.state.recipeYeastList[0].value.attenuation / 100
+        let fg = (((og - (og * attenuation)).toFixed(0)) / 1000) + 1
+        og = (og / 1000) + 1
+        this.setState({fg})
+        // calculate AVB
+        this.calculateAVB(og,fg)
+    }
+    /* CALCULATE IBU ****************************************************************************/
+    
 
 
+
+    determineCalculations = (state) => {
+        if(state === this.state.recipeMaltAmounts || state === this.state.recipeMaltList){
+            this.calculateGrainBillFromAmountChange()
+        } else if(state === this.state.recipeYeastList) {
+            this.calculateFGFromYeastChange()
+        }
+    }
     render() {
         return (
             <div className='recipe-form'>
