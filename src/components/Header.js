@@ -9,7 +9,7 @@ class Header extends React.Component {
                 <div className='header-options'>
                     <button className='header-btn' onClick={() => this.props.handleWelcome(true)}>Home</button>
                     <button className='header-btn' onClick={() => this.props.handleDash(false)}>Recipes</button>
-                    <button className='header-btn' onClick={() => this.props.handleDash(true)}>References</button>
+                    <button className='header-btn' onClick={() => this.props.handleDash(true)}>Databases</button>
                 </div>
             </div>
         )

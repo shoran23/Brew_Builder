@@ -9,35 +9,37 @@ class Hop extends React.Component {
     handleSelectChange = e => {
         this.props.handleRecipeState(this.props.recipeHopList,e,this.props.index)
     }
-    handleChangeAmount = (event,index) => {
-        this.setState({
-          [event.target.id]: event.target.value
-        })
-
-        // set recipe hop amount function here with the value above
-
+    handleChangeAmount = (event) => {
+        this.setState({[event.target.id]: event.target.value})
+        let tempValue = Number(event.target.value)
+        this.props.handleRecipeState(this.props.recipeHopAmounts,tempValue,this.props.index)
     } 
+    handleChangeTime = (event) => {
+        this.setState({[event.target.id]: event.target.value})
+        let tempValue = Number(event.target.value)
+        this.props.handleRecipeState(this.props.recipeHopTimes,tempValue,this.props.index)
+    }
     render() {
         return (
             <div className='recipe-form-data-row'>
+                <div className='recipe-form-data-column'>
+                    <div className='recipe-form-data-label'>Boil Time(min)</div>
+                    <input 
+                        type="number"
+                        name='hopTime'
+                        id='hopTime'
+                        value={this.props.recipeHopTimes[this.props.index]}
+                        onChange={this.handleChangeTime}
+                    />
+                </div>
                 <div className='recipe-form-data-column'>
                     <div className='recipe-form-data-label'>Amount(oz)</div>
                     <input 
                         type="number"
                         name='hopAmount'
                         id='hopAmount'
-                        value={this.state.hopAmount}
-                        onChange={() => this.handleChangeLocal(this.props.index)}
-                    />
-                </div>
-                <div className='recipe-form-data-column'>
-                    <div className='recipe-form-data-label'>Boil Time(min)</div>
-                    <input 
-                        type="decimal"
-                        name='recipeHopTimes'
-                        id='recipeHopTimes'
-                        value={this.props.recipeHopTimes[this.props.index]}
-                        onChange={this.props.handleChange}
+                        value={this.props.recipeHopAmounts[this.props.index]}
+                        onChange={this.handleChangeAmount}
                     />
                 </div>
                 <div className='recipe-form-data-column'>

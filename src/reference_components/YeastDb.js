@@ -21,7 +21,7 @@ class Yeast extends React.Component {
 class YeastDetails extends React.Component {
     render() {
         return (
-            <div className='view-background' onClick={() => {this.props.handleDetailView(false)}}>
+            <div className='view-background'>
                 <div className='view'>
                     <h2>{this.props.yeast.name}</h2>
                     <div className='view-data'>
@@ -59,6 +59,10 @@ class YeastDetails extends React.Component {
                         <div className='view-data-column'>
                             <div className='view-data-label'>Notes</div>
                             <div className='view-data-content'>{this.props.yeast.notes}</div>
+                        </div>
+
+                        <div className='view-data-options'>
+                            <button className='view-data-option-close' onClick={() => this.props.handleDetailView(false)}>Close</button>
                         </div>
 
                     </div>

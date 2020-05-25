@@ -21,7 +21,7 @@ class Style extends React.Component {
 class StyleDetails extends React.Component {
     render() {
         return (
-            <div className='view-background' onClick={() => this.props.handleDetailView(false)}>
+            <div className='view-background'>
                 <div className='view'>
                     <h2>{this.props.style.name}</h2>
                     <div className='view-data'>
@@ -82,7 +82,10 @@ class StyleDetails extends React.Component {
                             <div className='view-data-label'>Alcohol By Volume Range</div>
                             <div className='view-data-content'>{this.props.style.alc_by_vol_low} - {this.props.style.alc_by_vol_high}</div>
                         </div>
-
+                        
+                        <div className='view-data-options'>
+                            <button className='view-data-option-close' onClick={() => this.props.handleDetailView(false)}>Close</button>
+                        </div>
 
                     </div>
                 </div>

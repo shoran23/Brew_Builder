@@ -28,11 +28,6 @@ class ReferenceDashboard extends React.Component {
                                 <li className='reference-dashboard-list-item'><Link className='reference-dashboard-list-link' to='/hop-db'>Hop Database</Link></li>
                                 <li className='reference-dashboard-list-item'><Link className='reference-dashboard-list-link' to='/yeast-db'>Yeast Database</Link></li>
                                 <li className='reference-dashboard-list-item'><Link className='reference-dashboard-list-link' to='/style-guide'>Style Guidelines</Link></li>
-                                <li className='reference-dashboard-list-item'><Link className='reference-dashboard-list-link' to='/ibu-calc'>IBU Calculator</Link></li>
-                                <li className='reference-dashboard-list-item'><Link className='reference-dashboard-list-link' to='/srm-calc'>SRM Calculator</Link></li>
-                                <li className='reference-dashboard-list-item'><Link className='reference-dashboard-list-link' to='/avb-calc'>AVB Calculator</Link></li>
-                                <li className='reference-dashboard-list-item'><Link className='reference-dashboard-list-link' to='/priming-calc'>Priming Calculator</Link></li>
-                                <li className='reference-dashboard-list-item'><Link className='reference-dashboard-list-link' to='/infusion-calc'>Infusion Calculator</Link></li>
                             </ul>
                         </nav>
                         <Switch>
@@ -40,11 +35,6 @@ class ReferenceDashboard extends React.Component {
                             <Route path='/hop-db'><HopDb/></Route>
                             <Route path='/yeast-db'><YeastDb/></Route>
                             <Route path='/style-guide'><StyleGuide srmColors={this.props.srmColors}/></Route>
-                            <Route path='/ibu-calc'><IbuCalc/></Route>
-                            <Route path='/srm-calc'><SrmCalc/></Route>
-                            <Route path='/avb-calc'><AvbCalc/></Route>
-                            <Route path='/priming-calc'><PrimingCalc/></Route>
-                            <Route path='/infusion-calc'><InfusionCalc/></Route>
                         </Switch>
                     </div>
                 </Router>

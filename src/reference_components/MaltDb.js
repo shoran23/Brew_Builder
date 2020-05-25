@@ -21,7 +21,7 @@ class Malt extends React.Component {
 class MaltDetails extends React.Component {
     render() {
         return (
-            <div className='view-background' onClick={() => this.props.handleDetailView(false)}>
+            <div className='view-background'>
                 <div className='view'>
                     <h2>{this.props.malt.name}</h2>
                     <div className='view-data'>
@@ -41,20 +41,8 @@ class MaltDetails extends React.Component {
                         </div>
 
                         <div className='view-data-row'>
-                            <div className='view-data-label'>Color(SRM)</div>
-                            <div 
-                                style={{
-                                    backgroundColor: `${this.props.srmColors[this.props.malt.color]}`,
-                                    width: '50px',
-                                    height: '50px',
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    color: 'white',
-                                    textShadow: '1px 1px black',
-                                    fontWeight: 'bold'
-                                }}>{this.props.malt.color}
-                            </div>
+                            <div className='view-data-label'>Color(°L)</div>
+                            <div>{this.props.malt.color}</div>
                         </div>
      
                         <div className='view-data-row'>
@@ -75,6 +63,10 @@ class MaltDetails extends React.Component {
                         <div className='view-data-column'>
                             <div className='view-data-label'>Notes</div>
                             <div>{this.props.malt.notes}</div>
+                        </div>
+
+                        <div className='view-data-options'>
+                            <button className='view-data-option-close' onClick={() => this.props.handleDetailView(false)}>Close</button>
                         </div>
 
                     </div>

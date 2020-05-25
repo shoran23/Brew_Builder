@@ -12,22 +12,24 @@ class RecipeForm extends React.Component {
         hopList: [],
         yeastList: [],
 
+        totalGravity: 0,
+
         name: "",
         description: "",
-        volume: 0,
-        efficiency: 0,
+        volume: 5.5,
+        efficiency: 68,
         selectedStyle: {},
-        og: 0,
-        fg: 0,
-        avb: 0,
-        ibu: 0,
+        og: "-",
+        fg: "-",
+        avb: "-",
+        ibu: "-",
         srm: 1,
 
         currentRecipeId: 0,
 
         recipeMaltList: [{}],
-        recipeMaltAmounts: [1],
-        recipeMaltPercentages: [2],
+        recipeMaltAmounts: [null],
+        recipeMaltPercentages: [null],
 
         recipeHopList: [{}],
         recipeHopAmounts: [1],
@@ -195,6 +197,9 @@ class RecipeForm extends React.Component {
         let tempArray = state
         tempArray[index] = event
         this.setState({state: tempArray})
+
+
+        this.determineCalculations()
     }
     /* Handle Recipt Style **************************************************************************/
     handleSelectStyle = selectedOption => {
@@ -206,9 +211,9 @@ class RecipeForm extends React.Component {
         let maltAmountArr = this.state.recipeMaltAmounts
         let maltPercentagesArr = this.state.recipeMaltPercentages
         if(action === 'add'){
-            maltListArr.push({})
-            maltAmountArr.push(0)
-            maltPercentagesArr.push(0)
+            maltListArr.push(this.state.maltList[0])
+            maltAmountArr.push(null)
+            maltPercentagesArr.push(null)
 
         } else if(action === 'delete'){
             if(this.state.recipeMaltList.length > 1){
@@ -256,6 +261,47 @@ class RecipeForm extends React.Component {
         this.setState({recipeYeastAmounts: yeastAmountArr})
     }
     /* RECIPE CALCULATIONS ****************************************************************************/
+    calculateOGWithTotalGU = (totalGU) => {
+        let recipeOG = (((totalGU / this.state.volume).toFixed(0)) / 1000) + 1
+        this.setState({og: recipeOG})
+    }
+
+    calculateGrainBillFromAmountChange = () => {
+        // add up the total malt amount
+        let totalMaltAmount = 0
+        for(let i=0;i<this.state.recipeMaltAmounts.length;i++){
+            if(this.state.recipeMaltAmounts[i] !== null){
+                totalMaltAmount = totalMaltAmount + this.state.recipeMaltAmounts[i]
+            }
+        }
+        // determine percetage of each malt
+        let maltPercentArr = []
+        for(let j=0;j<this.state.recipeMaltAmounts.length;j++){
+            // determine percentages of each malt
+            let maltPercent = ((this.state.recipeMaltAmounts[j] / totalMaltAmount) * 100).toFixed(1) 
+            maltPercentArr.push(maltPercent)
+        }
+        let totalGU = 0
+        this.setState({recipeMaltPercentages: maltPercentArr})
+        // determine proportional amounts
+        for(let k=0;k<this.state.recipeMaltAmounts.length;k++){
+            let maltGU = (((this.state.recipeMaltList[k].value.potential) - 1) * 1000).toFixed(0)
+            console.log('Malt GU: ',maltGU)
+            let proportionalAmount = Number((maltGU * this.state.recipeMaltAmounts[k] * (this.state.efficiency / 100)).toFixed(0))
+            console.log('PA: ',proportionalAmount)
+            totalGU += proportionalAmount;
+        }
+        console.log('Total GU: ',totalGU)
+        this.calculateOGWithTotalGU(totalGU)
+
+
+    }
+
+    determineCalculations = () => {
+        this.calculateGrainBillFromAmountChange()
+    }
+
+
     render() {
         return (
             <div className='recipe-form'>
@@ -330,7 +376,7 @@ class RecipeForm extends React.Component {
                                 <div className='recipe-form-data-label'>O.G.</div>
                                 <input 
                                     className='recipe-form-data-input'
-                                    type="decimal"
+                                    type="text"
                                     name='og'
                                     id='og'
                                     value={this.state.og}
