@@ -17,7 +17,7 @@ class App extends React.Component {
     loggedIn: false,
     showWelcome: true,
     showDash: true,
-    srmColors: [
+    srmColors: [ "",
       '#F8F4B4','#F9E06C','#F4CE51','#F2BE37','#EDAC1D','#E59C1A','#DF8F17','#D6801A','#CF731C','#BD591B',
       '#C3621A','#C86B1A','#B7521A','#AD4418','#AE4817','#AD4418','#A73D16','#A23A15','#9D3414','#983015',
       '#932A14','#8D2615','#892516','#832311','#7D200E','#771D0D','#731C0A','#70180D','#6A150C','#67110A',

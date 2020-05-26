@@ -19,6 +19,10 @@ class Malt extends React.Component {
         let tempValue = Number(event.target.value)
         this.props.handleRecipeState(this.props.recipeMaltPercentages,tempValue,this.props.index)
     }
+    handleDetailViewLocal = (state,malt) => {
+        this.props.handleDetailView(state)
+        this.props.handleDetail(malt.value)
+    }
     render() {
         return (
             <div className='recipe-form-data-row'>
@@ -30,7 +34,6 @@ class Malt extends React.Component {
                         id='maltAmount'
                         value={this.props.recipeMaltAmounts[this.props.index]}
                         onChange={this.handleChangeAmount}
-
                     />
                 </div>
                 <div className='recipe-form-data-column'>
@@ -52,7 +55,7 @@ class Malt extends React.Component {
                     />
                 </div>
                 <div className='recipe-form-data-column'>
-                    <button>View</button>
+                    <button onClick={() => this.handleDetailViewLocal(true,this.props.recipeMaltList[this.props.index])}>View</button>
                     <button onClick={() => this.props.changeMaltArraySize('delete',this.props.index)}>Delete</button>
                 </div>
             </div>

@@ -3,6 +3,7 @@ import RecipeView from './RecipeView.js'
 import RecipeForm from './RecipeForm.js'
 import '../css/view-db.css'
 import '../css/list-db.css'
+import MaltDetails from '../reference_components/MaltDetails.js'
 
 
 class Recipe extends React.Component {
@@ -14,7 +15,7 @@ class Recipe extends React.Component {
                     <div className='list-db-item-options'>
                         <button className='list-db-item-btn' onClick={() => this.props.viewRecipe(this.props.recipe.id)}>View</button>
                         <button className='list-db-item-btn' onClick={() => this.props.handlePage('edit')}>Edit</button>
-                        <button className='list-db-item-btn' onClick={() => this.props.deleteReceipe(this.props.recipe.id)}>Delete</button>
+                        <button className='list-db-item-btn' onClick={() => this.props.deleteReceipeSequence(this.props.recipe.id)}>Delete</button>
                     </div>
                 </div>
             </div>
@@ -220,11 +221,16 @@ class RecipeDb extends React.Component {
         fetch(`http://localhost:3000/recipes/${id}`, {
             method: 'DELETE',
             headers: {'Content-Type' : 'application/json'}
-        })
+        }).then(res => console.log(res))
+        setTimeout(this.getRecipeList,44)
+    }
+    deleteReceipeSequence = id => {
         this.deleteRecipeLedgers(id,'style')
         this.deleteRecipeLedgers(id,'grain')
         this.deleteRecipeLedgers(id,'hop')
         this.deleteRecipeLedgers(id,'yeast')
+        
+        setTimeout(() => this.deleteReceipe(id),500)
     }
     handlePage = state => {
         if(state === 'list'){
@@ -275,7 +281,7 @@ class RecipeDb extends React.Component {
                                             recipe={recipe}
                                             handlePage={this.handlePage}
                                             viewRecipe={this.viewRecipe}
-                                            deleteReceipe={this.deleteReceipe}
+                                            deleteReceipeSequence={this.deleteReceipeSequence}
                                         />
                                     ))}
                                 </div>
@@ -298,6 +304,8 @@ class RecipeDb extends React.Component {
                                             { !this.state.editItem ?
                                                 <RecipeForm 
                                                     srmColors={this.props.srmColors}
+                                                    handlePage={this.handlePage}
+                                                    getRecipeList={this.getRecipeList}
                                                     handlePage={this.handlePage}
                                                 />
                                             :

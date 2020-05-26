@@ -19,6 +19,10 @@ class Hop extends React.Component {
         let tempValue = Number(event.target.value)
         this.props.handleRecipeState(this.props.recipeHopTimes,tempValue,this.props.index)
     }
+    handleDetailViewLocal = (state,hop) => {
+        this.props.handleDetailView(state)
+        this.props.handleDetail(hop.value)
+    }
     render() {
         return (
             <div className='recipe-form-data-row'>
@@ -51,7 +55,7 @@ class Hop extends React.Component {
                     />
                 </div>
                 <div className='recipe-form-data-column'>
-                    <button>View</button>
+                    <button onClick={() => this.handleDetailViewLocal(true,this.props.recipeHopList[this.props.index])}>View</button>
                     <button onClick={() => this.props.changeHopArraySize('delete',this.props.index)}>Delete</button>
                 </div>
             </div>

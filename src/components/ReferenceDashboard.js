@@ -10,11 +10,6 @@ import MaltDb from '../reference_components/MaltDb.js'
 import HopDb from '../reference_components/HopDb.js'
 import YeastDb from '../reference_components/YeastDb.js'
 import StyleGuide from '../reference_components/StyleGuide.js'
-import IbuCalc from '../reference_components/IbuCalc.js'
-import AvbCalc from '../reference_components/AvbCalc.js'
-import SrmCalc from '../reference_components/SrmCalc.js'
-import PrimingCalc from '../reference_components/PrimingCalc.js'
-import InfusionCalc from '../reference_components/InfusionCalc.js'
 
 class ReferenceDashboard extends React.Component {
     render() {

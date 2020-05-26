@@ -1,6 +1,7 @@
 import React from 'react'
 import '../css/view-db.css'
 import '../css/list-db.css'
+import MaltDetails from './MaltDetails.js'
 
 class Malt extends React.Component {
     render() {
@@ -18,63 +19,7 @@ class Malt extends React.Component {
         )
     }
 }
-class MaltDetails extends React.Component {
-    render() {
-        return (
-            <div className='view-background'>
-                <div className='view'>
-                    <h2>{this.props.malt.name}</h2>
-                    <div className='view-data'>
 
-                        <div className='view-data-row'>
-                            <div className='view-data-label'>Origin</div>
-                            <div className='view-data-content'>{this.props.malt.origin}</div>
-                        </div>
-
-                        <div className='view-data-row'>
-                            <div className='view-data-label'>Used In Mash</div>
-                            {this.props.malt.mash ?
-                                <div>Yes</div>
-                            :
-                                <div>No</div>
-                            }
-                        </div>
-
-                        <div className='view-data-row'>
-                            <div className='view-data-label'>Color(°L)</div>
-                            <div>{this.props.malt.color}</div>
-                        </div>
-     
-                        <div className='view-data-row'>
-                            <div className='view-data-label'>Power</div>
-                            <div>{this.props.malt.power}</div>
-                        </div>
-
-                        <div className='view-data-row'>
-                            <div className='view-data-label'>Potential</div>
-                            <div>{this.props.malt.potential}</div>
-                        </div>
-
-                        <div className='view-data-row'>
-                            <div className='view-data-label'>Max %</div>
-                            <div>{this.props.malt.max}</div>
-                        </div>
-
-                        <div className='view-data-column'>
-                            <div className='view-data-label'>Notes</div>
-                            <div>{this.props.malt.notes}</div>
-                        </div>
-
-                        <div className='view-data-options'>
-                            <button className='view-data-option-close' onClick={() => this.props.handleDetailView(false)}>Close</button>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        )
-    }
-}
 class MaltForm extends React.Component {
     render() {
         return (
@@ -252,9 +197,9 @@ class MaltDb extends React.Component {
         .then(resJson => {
             console.log('add malt response: ',resJson)
         })
-        setTimeout(this.getMaltList,100)
-        setTimeout(this.handleFormView(false),300)
-        setTimeout(this.clearFormStates,400)
+        setTimeout(this.getMaltList,300)
+        setTimeout(this.handleFormView(false),400)
+        setTimeout(this.clearFormStates,500)
 
     }
     handleChange = event => {

@@ -4,6 +4,11 @@ import Malt from './Malt.js'
 import Hop from './Hop.js'
 import Yeast from './Yeast.js'
 import '../css/recipe-form.css'
+import StyleComparison from './StyleComparison.js'
+import MaltDetails from '../reference_components/MaltDetails.js'
+import HopDetails from '../reference_components/HopDetails.js'
+import YeastDetails from '../reference_components/YeastDetails.js'
+
 
 class RecipeForm extends React.Component {
     state = {
@@ -14,6 +19,8 @@ class RecipeForm extends React.Component {
 
         totalGravity: 0,
 
+        showStyleCompare: false,
+
         name: "",
         description: "",
         volume: 5.5,
@@ -23,7 +30,7 @@ class RecipeForm extends React.Component {
         fg: "-",
         avb: "-",
         ibu: "-",
-        srm: 1,
+        srm: 0,
 
         currentRecipeId: 0,
 
@@ -36,7 +43,14 @@ class RecipeForm extends React.Component {
         recipeHopTimes: [60],
 
         recipeYeastList: [{}], 
-        recipeYeastAmounts: [1]
+        recipeYeastAmounts: [1],
+
+        detailMalt: {},
+        maltDetailView: false,
+        detailHop: {},
+        hopDetailView: false,
+        detailYeast: {},
+        yeastDetailView: false
     }
     /* ADD RECIPE *************************************************************************************/
     addYeastLedgers = () => {
@@ -54,6 +68,8 @@ class RecipeForm extends React.Component {
                 console.log('Add Recipe Yeast Ledger Resp: ',resJson)
             })
         }
+        setTimeout(this.props.getRecipeList,200)
+        setTimeout(this.props.handlePage('list'),300)
     }
     addHopLedgers = () => {
         for(let i=0;i<this.state.recipeHopList.length;i++){
@@ -122,7 +138,7 @@ class RecipeForm extends React.Component {
             headers: {'Content-Type' : 'application/json'}
         }).then(res => res.json())
         .then(resJson => {
-            console.log(resJson)
+            console.log('Add Recipe: ',resJson)
             this.setState({currentRecipeId: resJson.id})
         })
         setTimeout(this.addStyleLedger,100)
@@ -192,6 +208,8 @@ class RecipeForm extends React.Component {
         this.setState({
           [event.target.id]: event.target.value
         })
+
+        this.determineCalculations(event.target.id)
     } 
     handleRecipeState = (state,event,index) => {
         let tempArray = state
@@ -305,16 +323,113 @@ class RecipeForm extends React.Component {
         this.calculateAVB(og,fg)
     }
     /* CALCULATE IBU ****************************************************************************/
-    
-
-
-
+    calculateIBU = () => {
+        if(this.state.og !== '-'){
+            // determine cgravity
+            let cgravity = 1 + ((this.state.og - 1.050) / 2)
+            let totalIBU = 0
+            for(let i=0;i<this.state.recipeHopList.length;i++){
+                let time = this.state.recipeHopTimes[i]
+                let amount = this.state.recipeHopAmounts[i]
+                let alpha = (this.state.recipeHopList[i].value.alpha / 100)
+                let utilization = 0
+                if(time > 75){
+                    utilization = 34
+                } else if(time < 75 && time >= 60) {
+                    utilization = 30
+                } else if(time < 60 && time >= 45) {
+                    utilization = 27
+                } else if(time < 45 && time >= 30) {
+                    utilization = 24
+                } else if(time < 30 && time >= 20) {
+                    utilization = 19
+                } else if(time < 20 && time >= 10) {
+                    utilization = 15
+                } else if(time < 10 && time > 0) {
+                    utilization = 6
+                } else if(time = 0) {
+                    utilization = 0
+                }
+                utilization = utilization / 100
+                let ibu = (amount * utilization * alpha * utilization * 7489) / (this.state.volume / cgravity)
+                totalIBU += ibu
+            }
+            this.setState({ibu: (totalIBU).toFixed(0)})
+        }
+    }
+    /* CALCULATE SRM ****************************************************************************/
+    calculateSRM = () => {
+        let mcuTotal = 0
+        for(let i=0;i<this.state.recipeMaltList.length;i++){
+            let mcu = (this.state.recipeMaltList[i].value.color * this.state.recipeMaltAmounts[i])
+            mcuTotal += mcu
+        }
+        mcuTotal = mcuTotal / this.state.volume
+        let srmTotal = (1.4922 * Math.pow(mcuTotal,0.6859)).toFixed(0)
+        if(srmTotal > 40){
+            srmTotal = 40
+        }
+        this.setState({srm: srmTotal})
+    }
     determineCalculations = (state) => {
         if(state === this.state.recipeMaltAmounts || state === this.state.recipeMaltList){
-            this.calculateGrainBillFromAmountChange()
+            if(Object.keys(this.state.recipeMaltList[this.state.recipeMaltList.length - 1]).length > 0){
+                this.calculateGrainBillFromAmountChange()
+                this.calculateSRM()
+                if(Object.keys(this.state.recipeYeastList[this.state.recipeYeastList.length - 1]).length > 0) {
+                    this.calculateFGFromYeastChange()
+                }
+            }
+            if(Object.keys(this.state.recipeHopList[this.state.recipeHopList.length - 1]).length > 0){
+                this.calculateIBU()
+            }
         } else if(state === this.state.recipeYeastList) {
             this.calculateFGFromYeastChange()
+        } else if(state === this.state.recipeHopList || state === this.state.recipeHopAmounts || state === this.state.recipeHopTimes) {
+            if(Object.keys(this.state.recipeHopList[this.state.recipeHopList.length - 1]).length > 0){
+                this.calculateIBU()
+            }
+        } else if(state === this.state.volume){
+            if(Object.keys(this.state.recipeMaltList[this.state.recipeMaltList.length - 1]).length > 0){
+                this.calculateGrainBillFromAmountChange()
+                this.calculateSRM()
+                if(Object.keys(this.state.recipeYeastList[this.state.recipeYeastList.length - 1]).length > 0) {
+                    this.calculateFGFromYeastChange()
+                }
+            }
+        } else if(state === this.state.efficiency) {
+            if(Object.keys(this.state.recipeMaltList[this.state.recipeMaltList.length - 1]).length > 0){
+                this.calculateGrainBillFromAmountChange()
+                this.calculateSRM()
+                if(Object.keys(this.state.recipeYeastList[this.state.recipeYeastList.length - 1]).length > 0) {
+                    this.calculateFGFromYeastChange()
+                }
+            }
         }
+    }
+    /* Page  *******************************************************************************************/
+    handleStyleCompare = state => {
+        this.setState({showStyleCompare: state})
+    }
+    handleDetailMalt = (malt) => {
+        this.setState({detailMalt: malt})
+    }
+    handleMaltDetailView = state => {
+        this.setState({showMaltDetail: state})
+    }
+    handleDetailHop = hop => {
+        this.setState({detailHop: hop})
+    }
+    handleHopDetailView = state => {
+        this.setState({showHopDetail: state})        
+    }
+    handleDetailYeast = yeast => {
+        this.setState({detailYeast: yeast})
+        console.log(yeast)
+    }
+    handleYeastDetailView = state => {
+        this.setState({showYeastDetail: state})  
+        console.log(state)      
     }
     render() {
         return (
@@ -409,7 +524,7 @@ class RecipeForm extends React.Component {
                                 />
                             </div>
                             <div className='recipe-form-data-column'>
-                                <div className='recipe-form-data-label'>AVB</div>
+                                <div className='recipe-form-data-label'>A.B.V.</div>
                                 <input 
                                     className='recipe-form-data-input'
                                     type="decimal"
@@ -447,7 +562,7 @@ class RecipeForm extends React.Component {
                                     }}
                                 >{this.state.srm}</div>
                             </div>
-                            <button>Compare To Style</button>
+                            <button onClick={() => this.handleStyleCompare(true)}>Compare To Style</button>
                         </div>
                     </div>
                     {/* ROW 4 GRAIN BILL *************************************************************/}
@@ -468,6 +583,8 @@ class RecipeForm extends React.Component {
                                     recipeMaltAmounts={this.state.recipeMaltAmounts}
                                     recipeMaltPercentages={this.state.recipeMaltPercentages}
 
+                                    handleDetailView={this.handleMaltDetailView}
+                                    handleDetail={this.handleDetailMalt}
                                 />
                             ))}
                         </div>
@@ -490,6 +607,9 @@ class RecipeForm extends React.Component {
                                     recipeHopList={this.state.recipeHopList}
                                     recipeHopAmounts={this.state.recipeHopAmounts}
                                     recipeHopTimes={this.state.recipeHopTimes}
+
+                                    handleDetailView={this.handleHopDetailView}
+                                    handleDetail={this.handleDetailHop}
                                 />
                             ))}
                         </div>
@@ -509,6 +629,9 @@ class RecipeForm extends React.Component {
 
                                     recipeYeastList={this.state.recipeYeastList}
                                     recipeYeastAmounts={this.state.recipeYeastAmounts}
+                                    
+                                    handleDetailView={this.handleYeastDetailView}
+                                    handleDetail={this.handleDetailYeast}
                                 />
                             ))}
                         </div>
@@ -519,6 +642,43 @@ class RecipeForm extends React.Component {
                     <button onClick={this.addRecipe}>Save</button>
                     <button onClick={() => this.props.handlePage('list')}>Cancel</button>
                 </div>
+                {this.state.showStyleCompare ?
+                    <StyleComparison 
+                        handleStyleCompare={this.handleStyleCompare}
+                        selectedStyle={this.state.selectedStyle}
+                        ibu={this.state.ibu}
+                        srm={this.state.srm}
+                        og={this.state.og}
+                        fg={this.state.fg}
+                        avb={this.state.avb}
+                    />
+                :    
+                    <div></div>
+                }
+                { this.state.showMaltDetail ?
+                    <MaltDetails 
+                        malt={this.state.detailMalt}
+                        handleDetailView={this.handleMaltDetailView}
+                    />
+                :
+                        <div></div>
+                }
+                { this.state.showHopDetail ?
+                    <HopDetails 
+                        hop={this.state.detailHop}
+                        handleDetailView={this.handleHopDetailView}
+                    />
+                :
+                        <div></div>
+                }
+                { this.state.showYeastDetail ?
+                    <YeastDetails 
+                        yeast={this.state.detailYeast}
+                        handleDetailView={this.handleYeastDetailView}
+                    />
+                :
+                    <div></div>
+                }
             </div>
         )
     }
