@@ -10,7 +10,7 @@ class Style extends React.Component {
                     <h3 className='list-db-item-label'>{this.props.style.name}</h3>
                     <div className='list-db-item-options'>
                         <button className='list-db-item-btn' onClick={() => this.props.getStyleDetails(this.props.style.id)}>View</button>
-                        <button className='list-db-item-btn'>Edit</button>
+                        <button className='list-db-item-btn' onClick={() => this.props.setUpEdit(this.props.style.id)}>Edit</button>
                         <button className='list-db-item-btn' onClick={() => {this.props.deleteStyle(this.props.style.id)}}>Delete</button>
                     </div>
                 </div>
@@ -99,7 +99,11 @@ class StyleForm extends React.Component {
             <div className='form-background'>
                 <div className='form'>
                     <div className='form-data'>
-                        <div className='form-data-title'>Add Style</div>
+                        {!this.props.editStyle ?
+                            <div className='form-data-title'>Add Style</div>
+                        :
+                            <div className='form-data-title'>Edit Style</div>
+                        }
                         <div className='form-data-row'>
                             <div className='form-data-label'>Name</div>
                             <input 
@@ -228,7 +232,7 @@ class StyleForm extends React.Component {
                             </div>
                         </div>
                         <div className='form-data-option'>
-                            <button className='form-data-option-save' onClick={() => {this.props.addStyle()}}>Save</button>
+                            <button className='form-data-option-save' onClick={() => {this.props.handleSave()}}>Save</button>
                             <button className='form-data-option-cancel' onClick={() => {this.props.handleFormView(false)}}>Cancel</button>
                         </div>
                     </div>
@@ -245,6 +249,7 @@ class StyleGuide extends React.Component {
         currentStyle: {},
         showDetail: false,
         showForm: false,
+        editStyle: false,
         srmColorRange: [],
         name: "",
         overview: "",
@@ -271,6 +276,10 @@ class StyleGuide extends React.Component {
     }
     handleFormView = state => {
         this.setState({showForm: state})
+        if(state === false){
+            this.setState({editStyle: false})
+            setTimeout(this.clearFormStates,200)    
+        }
     }
     getStyleDetails = id => {
         fetch(`http://localhost:3000/styles/${id}`)
@@ -327,10 +336,69 @@ class StyleGuide extends React.Component {
         setTimeout(this.getStyleList,100)
         setTimeout(this.handleFormView(false),300)
     }
+    editStyle = id => {
+        fetch(`http://localhost:3000/styles/${id}`, {
+            method: "PUT",
+            body: JSON.stringify({
+                name: this.state.name,
+                overview: this.state.overview,
+                ibu_low: this.state.ibu_low,
+                ibu_high: this.state.ibu_high,
+                srm_low: this.state.srm_low,
+                srm_high: this.state.srm_high,
+                og_low: this.state.og_low,
+                og_high: this.state.og_high,
+                fg_low: this.state.fg_low,
+                fg_high: this.state.fg_high,
+                alc_by_vol_low: this.state.alc_by_vol_low,
+                alc_by_vol_high: this.state.alc_by_vol_high
+            }),
+            headers: {'Content-Type' : 'application/json'}
+        }).then(res => res.json())
+        .then(resJson => {
+            console.log('edit style response: ',resJson)
+        })
+        setTimeout(this.getStyleList,300)
+        setTimeout(this.handleFormView(false),400)
+        setTimeout(this.clearFormStates,500)        
+    }
     handleChange = event => {
         this.setState({
             [event.target.id]: event.target.value
         })
+    }
+    setUpEdit = id => {
+        // find malt by id
+        let editingStyle = {}
+        for(let i=0;i<this.state.styles.length;i++){
+            if(this.state.styles[i].id === id){
+                editingStyle = this.state.styles[i]
+                break
+            }
+        }
+        // set up states for the edit
+        this.setState({editStyle: true})
+        this.setState({currentStyle: editingStyle})
+        this.setState({name: editingStyle.name})
+        this.setState({overview: editingStyle.overview})
+        this.setState({ibu_low: editingStyle.ibu_low})
+        this.setState({ibu_high: editingStyle.ibu_high})
+        this.setState({srm_low: editingStyle.srm_low})
+        this.setState({srm_high: editingStyle.srm_high})
+        this.setState({og_low: editingStyle.og_low})
+        this.setState({og_high: editingStyle.og_high})
+        this.setState({fg_low: editingStyle.fg_low})
+        this.setState({fg_high: editingStyle.fg_high})
+        this.setState({alc_by_vol_low: editingStyle.alc_by_vol_low})
+        this.setState({alc_by_vol_high: editingStyle.alc_by_vol_high})
+        this.handleFormView(true)
+    }
+    handleSave = () => {
+        if(this.state.editStyle === true){
+            this.editStyle(this.state.currentStyle.id)
+        } else {
+            this.addStyle()
+        }
     }
     render() {
         return (
@@ -348,6 +416,7 @@ class StyleGuide extends React.Component {
                                     style={style}
                                     getStyleDetails={this.getStyleDetails}
                                     deleteStyle={this.deleteStyle}
+                                    setUpEdit={this.setUpEdit}
                                 />
                             ))}
                         </div>
@@ -381,6 +450,8 @@ class StyleGuide extends React.Component {
                             fg_high={this.state.fg_high}
                             alc_by_vol_low={this.state.alc_by_vol_low}
                             alc_by_vol_high={this.state.alc_by_vol_high}
+                            handleSave={this.handleSave}
+                            editStyle={this.state.editStyle}
                         />
                     :
                         <div></div>

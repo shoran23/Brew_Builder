@@ -14,45 +14,46 @@ class StyleComparison extends React.Component {
     handleChartedValue = state => {
         let valueArr = []
         let labelArr = []
-        if(state === 'IBU'){
-            valueArr.push(this.props.ibu)
-            valueArr.push(this.props.selectedStyle.value.ibu_low)
-            valueArr.push(this.props.selectedStyle.value.ibu_high)
-        } else if(state === 'SRM'){
-            valueArr.push(this.props.srm)
-            valueArr.push(this.props.selectedStyle.value.srm_low)
-            valueArr.push(this.props.selectedStyle.value.srm_high)
-        } else if(state === "O.G.") {
-            valueArr.push(this.props.og)
-            valueArr.push(this.props.selectedStyle.value.og_low)
-            valueArr.push(this.props.selectedStyle.value.og_high)
-        } else if(state === "F.G.") {
-            valueArr.push(this.props.fg)
-            valueArr.push(this.props.selectedStyle.value.fg_low)
-            valueArr.push(this.props.selectedStyle.value.fg_high)
-        } else if (state === "A.B.V.") {
-            valueArr.push(this.props.avb)
-            valueArr.push(this.props.selectedStyle.value.alc_by_vol_low)
-            valueArr.push(this.props.selectedStyle.value.alc_by_vol_high)
-        }
-        labelArr.push(`Recipe ${state}`)
-        labelArr.push(`Style Min ${state}`)
-        labelArr.push(`Style Max ${state}`)
-        this.setState({config:
-            {
-                type: 'bar',
-                series: [{
-                    values: valueArr
-                }],
-                "scale-x": {values: labelArr}
+        if(Object.keys(this.props.selectedStyle).length > 0){
+            if(state === 'IBU'){
+                valueArr.push(Number(this.props.ibu))
+                valueArr.push(this.props.selectedStyle.value.ibu_low)
+                valueArr.push(this.props.selectedStyle.value.ibu_high)
+            } else if(state === 'SRM'){
+                valueArr.push(Number(this.props.srm))
+                valueArr.push(this.props.selectedStyle.value.srm_low)
+                valueArr.push(this.props.selectedStyle.value.srm_high)
+            } else if(state === "O.G.") {
+                valueArr.push(Number(this.props.og))
+                valueArr.push(Number(this.props.selectedStyle.value.og_low))
+                valueArr.push(Number(this.props.selectedStyle.value.og_high))
+            } else if(state === "F.G.") {
+                valueArr.push(Number(this.props.fg))
+                valueArr.push(Number(this.props.selectedStyle.value.fg_low))
+                valueArr.push(Number(this.props.selectedStyle.value.fg_high))
+            } else if (state === "A.B.V.") {
+                valueArr.push(Number(this.props.avb))
+                valueArr.push(Number(this.props.selectedStyle.value.alc_by_vol_low))
+                valueArr.push(Number(this.props.selectedStyle.value.alc_by_vol_high))
             }
-        })
-        this.setState({chartLabel: `Compare ${state}`})
+            labelArr.push(`Recipe ${state}`)
+            labelArr.push(`Style Min ${state}`)
+            labelArr.push(`Style Max ${state}`)
+            this.setState({config:
+                {
+                    type: 'scatter',
+                    series: [
+                        {values: valueArr,}
+                    ],
+                    "scale-x": {values: labelArr}
+                }
+            })
+            this.setState({chartLabel: `Compare ${state}`})
+        } else {
+            alert("Please select a style to make a comparison.")
+        }
     }
     render() {
-
-        console.log('Style Comparison - Selected Style: ',this.props.selectedStyle)
-
         return (
             <div className='view-background'>
                 <div className='view'>

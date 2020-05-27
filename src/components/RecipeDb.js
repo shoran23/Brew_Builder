@@ -14,7 +14,7 @@ class Recipe extends React.Component {
                     <h3 className='list-db-item-label'>{this.props.recipe.name}</h3>
                     <div className='list-db-item-options'>
                         <button className='list-db-item-btn' onClick={() => this.props.viewRecipe(this.props.recipe.id)}>View</button>
-                        <button className='list-db-item-btn' onClick={() => this.props.handlePage('edit')}>Edit</button>
+                        <button className='list-db-item-btn' onClick={() => this.props.setUpEdit(this.props.recipe.id)}>Edit</button>
                         <button className='list-db-item-btn' onClick={() => this.props.deleteReceipeSequence(this.props.recipe.id)}>Delete</button>
                     </div>
                 </div>
@@ -28,6 +28,7 @@ class RecipeDb extends React.Component {
         viewItem: false,
         editItem: false,
         showForm: false,
+        editRecipe: false,
         recipes: [],
         currentRecipe: {},
         recipeStyleLedgers: [],
@@ -59,6 +60,8 @@ class RecipeDb extends React.Component {
             }
         }
         this.setState({currentStyleList: sortedStyles})
+        console.log('Sorted Styles: ',sortedStyles)
+        console.log('Current StyleLilst: ',this.state.currentStyleList)
     }
     getRecipeStyle = arr => {
         let styleArr = []
@@ -230,19 +233,17 @@ class RecipeDb extends React.Component {
         this.deleteRecipeLedgers(id,'hop')
         this.deleteRecipeLedgers(id,'yeast')
         
-        setTimeout(() => this.deleteReceipe(id),500)
+        setTimeout(() => this.deleteReceipe(id),800)
     }
     handlePage = state => {
         if(state === 'list'){
             this.setState({showList: true})
+            this.setState({editRecipe: false})
+            this.setState({currentRecipe: {}})
         } else if(state === 'view') {
             this.setState({viewItem: true})
             this.setState({showList: false})
-        } else if(state === 'edit') {
-            this.setState({editItem: true})
-            this.setState({viewItem: false})
-            this.setState({showList: false})
-        } else if(state === 'add'){
+        } else if(state === 'add' || state === 'edit'){
             this.setState({editItem: false})
             this.setState({viewItem: false})
             this.setState({showList: false})
@@ -261,9 +262,27 @@ class RecipeDb extends React.Component {
         this.getRecipeGrainLedgers(id)
         this.getRecipeHopLedgers(id)   
         this.getRecipeYeastLedgers(id)
-        setTimeout(() => this.handlePage('view'),1000)
+        if(this.state.editRecipe === false){
+            setTimeout(() => this.handlePage('view'),1000)
+        }
+    }
+    setUpEdit = id => {
+        let editingRecipe = {}
+        for(let i=0;i<this.state.recipes.length;i++){
+            if(this.state.recipes[i].id === id){
+                editingRecipe = this.state.recipes[i]
+                break
+            }
+        }
+        this.setState({editRecipe: true})
+        setTimeout(() => this.viewRecipe(id),500)
+        setTimeout(() => this.handlePage('edit'),1000)
     }
     render() {
+
+        //console.log('Current Style List:',this.state.currentStyleList)
+        // console.log('Current Recipe: ',this.state.currentRecipe)
+
         return (
             <div className='recipe-container'>
                 <div className='list'>
@@ -282,6 +301,7 @@ class RecipeDb extends React.Component {
                                             handlePage={this.handlePage}
                                             viewRecipe={this.viewRecipe}
                                             deleteReceipeSequence={this.deleteReceipeSequence}
+                                            setUpEdit={this.setUpEdit}
                                         />
                                     ))}
                                 </div>
@@ -307,6 +327,10 @@ class RecipeDb extends React.Component {
                                                     handlePage={this.handlePage}
                                                     getRecipeList={this.getRecipeList}
                                                     handlePage={this.handlePage}
+                                                    editRecipe={this.state.editRecipe}
+                                                    currentRecipe={this.state.currentRecipe}
+                                                    currentStyleList={this.state.currentStyleList}
+                                                    viewRecipe={this.state.viewRecipe}
                                                 />
                                             :
                                                 <h2>Edit Item</h2>

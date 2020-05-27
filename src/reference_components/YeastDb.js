@@ -11,7 +11,7 @@ class Yeast extends React.Component {
                     <h3 className='list-db-item-label'>{this.props.yeast.name}</h3>
                     <div className='list-db-item-options'>
                         <button className='list-db-item-btn' onClick={() => this.props.getYeastDetails(this.props.yeast.id)}>View</button>
-                        <button className='list-db-item-btn' >Edit</button>
+                        <button className='list-db-item-btn' onClick={() => this.props.setUpEdit(this.props.yeast.id)}>Edit</button>
                         <button className='list-db-item-btn' onClick={() => this.props.deleteYeast(this.props.yeast.id)}>Delete</button>
                     </div>
                 </div>
@@ -25,7 +25,11 @@ class YeastForm extends React.Component {
             <div className='form-background'>
                 <div className='form'>
                     <div className='form-data'>
-                        <div className='form-data-title'>Add Yeast</div>
+                        {!this.props.editYeast ?
+                            <div className='form-data-title'>Add Yeast</div>
+                        :
+                            <div className='form-data-title'>Edit Yeast</div>
+                        }
                         <div className='form-data-row'>
                             <div className='form-data-label'>Name</div>
                             <input 
@@ -125,7 +129,7 @@ class YeastForm extends React.Component {
                             />
                         </div>
                         <div className='form-data-option'>
-                            <button className='form-data-option-save' onClick={() => {this.props.addYeast()}}>Save</button>
+                            <button className='form-data-option-save' onClick={() => {this.props.handleSave()}}>Save</button>
                             <button className='form-data-option-cancel' onClick={() => {this.props.handleFormView(false)}}>Cancel</button>
                         </div>
                     </div>
@@ -139,6 +143,8 @@ class YeastDb extends React.Component {
         yeasts: [],
         currentYeast: {},
         showDetail: false,
+        showForm: false,
+        editYeast: false,
         name: "",
         lab: "",
         yeast_type: "",
@@ -161,6 +167,10 @@ class YeastDb extends React.Component {
     }
     handleFormView = state => {
         this.setState({showForm: state})
+        if(state === false){
+            this.setState({editYeast: false})
+            setTimeout(this.clearFormStates,200)    
+        }
     }
     getYeastDetails = id => {
         fetch(`http://localhost:3000/yeasts/${id}`)
@@ -200,10 +210,63 @@ class YeastDb extends React.Component {
         setTimeout(this.getYeastList,100)
         setTimeout(this.handleFormView(false),300)
     }
+    editYeast = id => {
+        fetch(`http://localhost:3000/yeasts/${id}`, {
+            method: "PUT",
+            body: JSON.stringify({
+                name: this.state.name,
+                lab: this.state.lab,
+                yeast_type: this.state.yeast_type,
+                form: this.state.form,
+                temp_low: this.state.temp_low,
+                temp_high: this.state.temp_high,
+                attenuation: this.state.attenuation,
+                flocculation: this.state.flocculation,
+                notes: this.state.notes
+            }),
+            headers: {'Content-Type' : 'application/json'}
+        }).then(res => res.json())
+        .then(resJson => {
+            console.log('add malt response: ',resJson)
+        })
+        setTimeout(this.getYeastList,300)
+        setTimeout(this.handleFormView(false),400)
+        setTimeout(this.clearFormStates,500)        
+    }
     handleChange = event => {
         this.setState({
           [event.target.id]: event.target.value
         })
+    }
+    setUpEdit = id => {
+        // find malt by id
+        let editingYeast = {}
+        for(let i=0;i<this.state.yeasts.length;i++){
+            if(this.state.yeasts[i].id === id){
+                editingYeast = this.state.yeasts[i]
+                break
+            }
+        }
+        // set up states for the edit
+        this.setState({name: editingYeast.name})
+        this.setState({lab: editingYeast.lab})
+        this.setState({yeast_type: editingYeast.yeast_type})
+        this.setState({form: editingYeast.form})
+        this.setState({temp_low: editingYeast.temp_low})
+        this.setState({temp_high: editingYeast.temp_high})
+        this.setState({attenuation: editingYeast.attenuation})
+        this.setState({flocculation: editingYeast.flocculation})
+        this.setState({notes: editingYeast.notes})
+        this.handleFormView(true)
+        this.setState({editYeast: true})
+        this.setState({currentYeast: editingYeast})
+    }
+    handleSave = () => {
+        if(this.state.editYeast === true){
+            this.editYeast(this.state.currentYeast.id)
+        } else {
+            this.addYeast()
+        }
     }
     render() {
         return (
@@ -221,6 +284,7 @@ class YeastDb extends React.Component {
                                     yeast={yeast}
                                     getYeastDetails={this.getYeastDetails}
                                     deleteYeast={this.deleteYeast}
+                                    setUpEdit={this.setUpEdit}
                                 />
                             ))}
                         </div>
@@ -250,6 +314,8 @@ class YeastDb extends React.Component {
                             attenuation={this.state.attenuation}
                             flocculation={this.state.flocculation}
                             notes={this.state.notes}
+                            handleSave={this.handleSave}
+                            editYeast={this.state.editYeast}
                         />
                     :
                         <div></div>

@@ -11,7 +11,7 @@ class Malt extends React.Component {
                     <h3 className='list-db-item-label'>{this.props.malt.name}</h3>
                     <div className='list-db-item-options'>
                         <button className='list-db-item-btn' onClick={() => this.props.getMaltDetails(this.props.malt.id)}>View</button>
-                        <button className='list-db-item-btn' >Edit</button>
+                        <button className='list-db-item-btn' onClick={() => this.props.setUpEdit(this.props.malt.id)}>Edit</button>
                         <button className='list-db-item-btn' onClick={() => this.props.deleteMalt(this.props.malt.id)}>Delete</button>
                     </div>
                 </div>
@@ -26,7 +26,11 @@ class MaltForm extends React.Component {
             <div className='form-background'>
                 <div className='form'>
                     <div className='form-data'>
-                        <div className='form-data-title'>Add Malt</div>
+                        {!this.props.editMalt ?
+                            <div className='form-data-title'>Add Malt</div>
+                        :
+                            <div className='form-data-title'>Edit Malt</div>
+                        }
                         <div className='form-data-row'>
                             <div className='form-data-label'>Name</div>
                             <input 
@@ -113,7 +117,7 @@ class MaltForm extends React.Component {
                             />
                         </div>
                         <div className='form-data-option'>
-                            <button className='form-data-option-save' onClick={() => {this.props.addMalt()}}>Save</button>
+                            <button className='form-data-option-save' onClick={() => {this.props.handleSave()}}>Save</button>
                             <button className='form-data-option-cancel' onClick={() => {this.props.handleFormView(false)}}>Cancel</button>
                         </div>
                     </div>
@@ -128,6 +132,7 @@ class MaltDb extends React.Component {
         currentMalt: {},
         showDetail: false,
         showForm: false,
+        editMalt: false,
         name: "",
         origin: "",
         mash: false,
@@ -149,6 +154,10 @@ class MaltDb extends React.Component {
     }
     handleFormView = state => {
         this.setState({showForm: state})
+        if(state === false){
+            this.setState({editMalt: false})
+            setTimeout(this.clearFormStates,200)    
+        }
     }
     toggleMash = () => {
         this.setState({mash: !this.state.mash})
@@ -200,12 +209,63 @@ class MaltDb extends React.Component {
         setTimeout(this.getMaltList,300)
         setTimeout(this.handleFormView(false),400)
         setTimeout(this.clearFormStates,500)
-
+    }
+    editMalt = id => {
+        fetch(`http://localhost:3000/grains/${id}`, {
+            method: "PUT",
+            body: JSON.stringify({
+                name: this.state.name,
+                origin: this.state.origin,
+                mash: this.state.mash,
+                color: this.state.color,
+                power: this.state.power,
+                potential: this.state.potential,
+                max: this.state.max,
+                notes: this.state.notes
+            }),
+            headers: {'Content-Type' : 'application/json'}
+        }).then(res => res.json())
+        .then(resJson => {
+            console.log('add malt response: ',resJson)
+        })
+        setTimeout(this.getMaltList,300)
+        setTimeout(this.handleFormView(false),400)
+        setTimeout(this.clearFormStates,500)        
     }
     handleChange = event => {
         this.setState({
           [event.target.id]: event.target.value
         })
+    }
+    setUpEdit = id => {
+        // find malt by id
+        let editingMalt = {}
+        for(let i=0;i<this.state.malts.length;i++){
+            if(this.state.malts[i].id === id){
+                editingMalt = this.state.malts[i]
+                break
+            }
+        }
+        // set up states for the edit
+        this.setState({editMalt: true})
+        this.setState({currentMalt: editingMalt})
+        this.setState({name: editingMalt.name})
+        this.setState({origin: editingMalt.origin})
+        this.setState({mash: editingMalt.mash})
+        this.setState({color: editingMalt.color})
+        this.setState({power: editingMalt.power})
+        this.setState({potential: editingMalt.potential})
+        this.setState({max: editingMalt.max})
+        this.setState({notes: editingMalt.notes})
+        this.handleFormView(true)
+
+    }
+    handleSave = () => {
+        if(this.state.editMalt === true){
+            this.editMalt(this.state.currentMalt.id)
+        } else {
+            this.addMalt()
+        }
     }
     render() {
         return (
@@ -223,6 +283,7 @@ class MaltDb extends React.Component {
                                     malt={malt}
                                     getMaltDetails={this.getMaltDetails}
                                     deleteMalt={this.deleteMalt}
+                                    setUpEdit={this.setUpEdit}
                                 />
                             ))}
                         </div>
@@ -253,6 +314,8 @@ class MaltDb extends React.Component {
                             max={this.state.max}
                             notes={this.state.notes}
                             toggleMash={this.toggleMash}
+                            handleSave={this.handleSave}
+                            editMalt={this.state.editMalt}
                         />
                     :
                         <div></div>

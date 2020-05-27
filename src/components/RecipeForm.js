@@ -21,18 +21,18 @@ class RecipeForm extends React.Component {
 
         showStyleCompare: false,
 
-        name: "",
-        description: "",
-        volume: 5.5,
-        efficiency: 68,
-        selectedStyle: {},
-        og: "-",
-        fg: "-",
-        avb: "-",
-        ibu: "-",
-        srm: 0,
+        name: this.props.currentRecipe.name,
+        description: this.props.currentRecipe.description,
+        volume: this.props.currentRecipe.volume,
+        efficiency: this.props.currentRecipe.efficiency,
+        selectedStyle: this.props.currentStyleList[0],
+        og: this.props.currentRecipe.og,
+        fg: this.props.currentRecipe.fg,
+        avb: this.props.currentRecipe.alc_by_vol,
+        ibu: this.props.currentRecipe.ibu,
+        srm: this.props.currentRecipe.srm,
 
-        currentRecipeId: 0,
+        currentRecipeId: this.props.currentRecipe.id,
 
         recipeMaltList: [{}],
         recipeMaltAmounts: [null],
@@ -141,7 +141,7 @@ class RecipeForm extends React.Component {
             console.log('Add Recipe: ',resJson)
             this.setState({currentRecipeId: resJson.id})
         })
-        setTimeout(this.addStyleLedger,100)
+        setTimeout(this.addStyleLedger,300)
     }
     /* GET INGREDIENTS FROM THE DATABASE **************************************************************/
     getStyleList = () => {
@@ -425,17 +425,23 @@ class RecipeForm extends React.Component {
     }
     handleDetailYeast = yeast => {
         this.setState({detailYeast: yeast})
-        console.log(yeast)
     }
     handleYeastDetailView = state => {
-        this.setState({showYeastDetail: state})  
-        console.log(state)      
+        this.setState({showYeastDetail: state})      
     }
     render() {
+
+        console.log('Current Style List[0]: ',this.props.currentStyleList[0])
+        // console.log('Selected Style: ',this.state.selectedStyle)
+
         return (
             <div className='recipe-form'>
                 <div className='recipe-form-data'>
-                    <div className='recipe-form-data-title'>New Recipe</div>
+                    {!this.props.editRecipe ? 
+                        <div className='recipe-form-data-title'>Add Recipe</div>
+                    :
+                        <div className='recipe-form-data-title'>Edit Recipe</div>
+                    }
                     {/* RECIPE FORM ROW 1 ************************************************************/}
                     <div className='recipe-form-data-row'>
                         <div className='recipe-form-data-column'>
@@ -551,7 +557,7 @@ class RecipeForm extends React.Component {
                                     style = {{
                                         width: 'auto',
                                         height: '25px',
-                                        backgroundColor: this.props.srmColors[this.state.srm - 1],
+                                        backgroundColor: this.props.srmColors[this.state.srm],
                                         fontSize: '16px',
                                         color: 'white',
                                         textShadow: '1px 1px black',
@@ -687,6 +693,10 @@ class RecipeForm extends React.Component {
         this.getMaltList()
         this.getHopList()
         this.getYeastList()
+
+        if(this.props.recipeEdit){
+            //this.props.viewRecipe(this.props.currentRecipe.id)
+        }
     }
 }
 export default RecipeForm
