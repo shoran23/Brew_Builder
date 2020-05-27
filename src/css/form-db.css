@@ -11,7 +11,7 @@
 
 .form {
     position: absolute;
-    top: 35%;
+    top: 50%;
     left: 50%;
     width: 900px;
     height: auto;
@@ -71,4 +71,17 @@
 .form-data-title {
     font-weight: bold;
     font-size: 32px;
+}
+
+.form-data-option-save, .form-data-option-cancel {
+    margin-top: 20px;
+    width: 100px;
+    height: 45px;
+    color: white;
+    text-shadow: 1px 1px black;
+    font-size: 16px;
+}
+
+.form-data-option-cancel {
+    background-color: tomato;
 }
