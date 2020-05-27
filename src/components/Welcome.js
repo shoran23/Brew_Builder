@@ -8,8 +8,7 @@ class Welcome extends React.Component {
                 <div className='msg'>
                     <h2 className='welcome-header'>Welcome to Brew Builder</h2>
                     <p>Access the recipe builder and create your own</p>
-                    <p>Or</p>
-                    <p>Access all of our database, calculators, and other references</p>
+                    <p>Access and manage the ingredient database</p>
                 </div>
             </div>
         )

@@ -119,13 +119,17 @@ class YeastForm extends React.Component {
                         </div>
                         <div className='form-data-column'>
                             <div className='form-data-label'>Notes</div>
-                            <input
+                            <textarea
                                 className='form-data-input'
                                 type="text"
                                 name='notes'
                                 id='notes'
                                 value={this.props.notes}
                                 onChange={this.props.handleChange}
+                                style={{
+                                    height: '100px',
+                                    padding: '5px 5px 5px 5px'
+                                }}
                             />
                         </div>
                         <div className='form-data-option'>
@@ -207,8 +211,8 @@ class YeastDb extends React.Component {
         .then(resJson => {
             console.log('add yeast response: ',resJson)
         })
-        setTimeout(this.getYeastList,100)
-        setTimeout(this.handleFormView(false),300)
+        setTimeout(this.getYeastList,400)
+        setTimeout(this.handleFormView(false),500)
     }
     editYeast = id => {
         fetch(`http://localhost:3000/yeasts/${id}`, {

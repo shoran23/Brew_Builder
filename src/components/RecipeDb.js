@@ -289,8 +289,10 @@ class RecipeDb extends React.Component {
                     <div className='list-db'>
                         <div className='list-db-header'>
                             <div className='list-db-title'>Recipes</div>
-                            <button className='list-db-add' onClick={() => this.handlePage('add')}>Add Recipe</button>
-                            <button className='list-db-see-all' onClick={() => this.handlePage('list')}>See All Recipes</button>
+                            <div className='list-db-header-options'>
+                                <button className='list-db-add' onClick={() => this.handlePage('add')}>Add Recipe</button>
+                                <button className='list-db-see-all' onClick={() => this.handlePage('list')}>See All Recipes</button>
+                            </div>
                         </div>
                             { this.state.showList ?
                                 <div className='list-db-list'>

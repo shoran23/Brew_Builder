@@ -443,7 +443,7 @@ class RecipeForm extends React.Component {
                         <div className='recipe-form-data-title'>Edit Recipe</div>
                     }
                     {/* RECIPE FORM ROW 1 ************************************************************/}
-                    <div className='recipe-form-data-row'>
+                    <div className='recipe-form-data-column-background'>
                         <div className='recipe-form-data-column'>
                             <div className='recipe-form-data-label'>Name</div>
                             <input
@@ -453,22 +453,30 @@ class RecipeForm extends React.Component {
                                 id='name'
                                 value={this.state.name}
                                 onChange={this.handleChange}
+                                style={{
+                                    width: '30%',
+                                    alignSelf: 'center'
+                                }}
                             />
                         </div>
                         <div className='recipe-form-data-column'>
-                        <div className='recipe-form-data-label'>Description</div>
-                            <input 
+                            <div className='recipe-form-data-label'>Description</div>
+                            <textarea 
                                 className='recipe-form-data-input'
                                 type="text"
                                 name='description'
                                 id='description'
                                 value={this.state.description}
                                 onChange={this.handleChange}
+                                style={{
+                                    height: '100px',
+                                    padding: '5px 5px 5px 5px'
+                                }}
                             />
                         </div>
                     </div>
                     {/* RECIPE FORM ROW 2 ************************************************************/}
-                    <div className='recipe-form-data-column'>
+                    <div className='recipe-form-data-column-background'>
                         <div className='recipe-form-data-subtitle'>Recipe Parameters</div>
                         <div className='recipe-form-data-row'> 
                             <div className='recipe-form-data-column'>
@@ -479,7 +487,7 @@ class RecipeForm extends React.Component {
                                     onChange={this.handleSelectStyle}
                                 />
                             </div>
-                            <div className='form-data-column'>
+                            <div className='recipe-form-data-column'>
                                 <div className='recipe-form-data-label'>Batch Volume</div>
                                 <input 
                                     className='recipe-form-data-input'
@@ -504,7 +512,7 @@ class RecipeForm extends React.Component {
                         </div>
                     </div>
                     {/* RECIPE FORM ROW 3 ************************************************************/}
-                    <div className='recipe-form-data-column'>
+                    <div className='recipe-form-data-column-background'>
                         <div className='recipe-form-data-subtitle'>Final Values</div>
                         <div className='recipe-form-data-row'>
                             <div className='recipe-form-data-column'>
@@ -572,7 +580,7 @@ class RecipeForm extends React.Component {
                         </div>
                     </div>
                     {/* ROW 4 GRAIN BILL *************************************************************/}
-                    <div className='recipe-form-data-column'>
+                    <div className='recipe-form-data-column-background'>
                         <div className='recipe-form-data-subtitle'>Grain Bill</div>
                         <button onClick={() => this.changeMaltArraySize('add',0)}>Add</button>
                         <div className='recipe-form-data-column'>
@@ -596,7 +604,7 @@ class RecipeForm extends React.Component {
                         </div>
                     </div>
                     {/* ROW 5 HOP SCHEDULE ***********************************************************/}
-                    <div className='recipe-form-data-column'>
+                    <div className='recipe-form-data-column-background'>
                         <div className='reipce-form-data-subtitle'>Hop Schedule</div>
                         <button onClick={() => this.changeHopArraySize('add',0)}>Add</button>
                         <div className='recipe-form-data-column'>
@@ -620,7 +628,7 @@ class RecipeForm extends React.Component {
                             ))}
                         </div>
                     </div>
-                    <div className='recipe-form-data-column'>
+                    <div className='recipe-form-data-column-background'>
                         <div className='recipe-form-data-subtitle'>Yeast</div>
                         <button onClick={() => this.changeYeastArraySize('add',0)}>Add</button>
                         <div className='recipe-form-data-column'>

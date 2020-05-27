@@ -17,10 +17,15 @@
 .recipe-form {
     width: 100%;
     height: auto;
-    border: 1px solid black;
     padding-bottom: 50px;
     background-color: white;
     margin-top: 65px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0,0,0,0.1);
+    padding-top: 20px;
 }
 
 .recipe-form-data {
@@ -30,28 +35,35 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    background-color: white;
 }
 
-.recipe-form-data-row {
+.recipe-form-data-row, .recipe-form-data-row-background { 
     width: 95%;
     margin-top: 10px;
     padding: 10px 10px 10px 10px;
-    background-color: rgba(0,0,0,0.1);
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
 }
 
-.recipe-form-data-column {
+.recipe-form-data-row-background {
+    background-color: rgba(0,0,0,0.1);
+}
+
+.recipe-form-data-column, .recipe-form-data-column-background {
     width: 95%;
     margin-top: 10px;
     padding: 10px 10px 10px 10px;
-    background-color: rgba(0,0,0,0.1);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: space-evenly;
+}
+
+.recipe-form-data-column-background {
+    background-color: rgba(0,0,0,0.1);
 }
 
 .recipe-form-data-label {

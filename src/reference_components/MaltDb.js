@@ -107,13 +107,17 @@ class MaltForm extends React.Component {
                         </div>
                         <div className='form-data-column'>
                             <div className='form-data-label'>Notes</div>
-                            <input
+                            <textarea
                                 className='form-data-input' 
                                 type="text"
                                 name="notes"
                                 id="notes"
                                 value={this.props.notes}
                                 onChange={this.props.handleChange}
+                                style={{
+                                    height: '100px',
+                                    padding: '5px 5px 5px 5px'
+                                }}
                             />
                         </div>
                         <div className='form-data-option'>
@@ -271,56 +275,58 @@ class MaltDb extends React.Component {
         return (
             <div className='list'>
                 <div className='list-db'>
-                    <div className='list-db-header'>
-                        <div className='list-db-title'>Malt Database</div>
-                        <button className='list-db-add' onClick={() => {this.handleFormView(true)}}>Add Malt</button>
-                    </div>
-                    { this.state.malts.length > 0 ? 
-                        <div className='list-db-list'>
-                            {this.state.malts.map(malt => (
-                                <Malt 
-                                    key={malt.id}
-                                    malt={malt}
-                                    getMaltDetails={this.getMaltDetails}
-                                    deleteMalt={this.deleteMalt}
-                                    setUpEdit={this.setUpEdit}
-                                />
-                            ))}
+
+                        <div className='list-db-header'>
+                            <div className='list-db-title'>Malt Database</div>
+                            <button className='list-db-add' onClick={() => {this.handleFormView(true)}}>Add Malt</button>
                         </div>
-                    :
-                        <h2 className=''>Not Available</h2>
-                    }  
-                    { this.state.showDetail ?
-                        <MaltDetails 
-                            malt={this.state.currentMalt}
-                            srmColors={this.props.srmColors}
-                            handleDetailView={this.handleDetailView}
-                        />
-                    :
-                        <div></div>
-                    }
-                    { this.state.showForm ?
-                        <MaltForm 
-                            malt={this.state.currentMalt}
-                            handleChange={this.handleChange}
-                            handleFormView={this.handleFormView}
-                            addMalt={this.addMalt}
-                            name={this.state.name}
-                            origin={this.state.origin}
-                            mash={this.state.mash}
-                            color={this.state.color}
-                            power={this.state.power}
-                            potential={this.state.potential}
-                            max={this.state.max}
-                            notes={this.state.notes}
-                            toggleMash={this.toggleMash}
-                            handleSave={this.handleSave}
-                            editMalt={this.state.editMalt}
-                        />
-                    :
-                        <div></div>
-                    }
-                </div>
+                        { this.state.malts.length > 0 ? 
+                            <div className='list-db-list'>
+                                {this.state.malts.map(malt => (
+                                    <Malt 
+                                        key={malt.id}
+                                        malt={malt}
+                                        getMaltDetails={this.getMaltDetails}
+                                        deleteMalt={this.deleteMalt}
+                                        setUpEdit={this.setUpEdit}
+                                    />
+                                ))}
+                            </div>
+                        :
+                            <h2 className=''>Not Available</h2>
+                        }  
+                        { this.state.showDetail ?
+                            <MaltDetails 
+                                malt={this.state.currentMalt}
+                                srmColors={this.props.srmColors}
+                                handleDetailView={this.handleDetailView}
+                            />
+                        :
+                            <div></div>
+                        }
+                        { this.state.showForm ?
+                            <MaltForm 
+                                malt={this.state.currentMalt}
+                                handleChange={this.handleChange}
+                                handleFormView={this.handleFormView}
+                                addMalt={this.addMalt}
+                                name={this.state.name}
+                                origin={this.state.origin}
+                                mash={this.state.mash}
+                                color={this.state.color}
+                                power={this.state.power}
+                                potential={this.state.potential}
+                                max={this.state.max}
+                                notes={this.state.notes}
+                                toggleMash={this.toggleMash}
+                                handleSave={this.handleSave}
+                                editMalt={this.state.editMalt}
+                            />
+                        :
+                            <div></div>
+                        }
+                    </div>
+
             </div>
         )
     }

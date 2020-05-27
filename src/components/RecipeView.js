@@ -4,10 +4,10 @@ import '../css/recipe-view.css'
 class GrainView extends React.Component {
     render() {
         return (
-            <div className='recipe-view-grain'>
-                <div className='recipe-view-grain-name'>{this.props.grain.name}</div>
-                <div className='recipe-view-grain-percentage'>{this.props.percentage}</div>
-                <div className='recipe-view-grain-amount'>{this.props.amount}</div>
+            <div className='recipe-view-row-list'>
+                <div className='recipe-view-row-item-start'>{this.props.grain.name}</div>
+                <div className='recipe-view-row-item-center'>{this.props.percentage}</div>
+                <div className='recipe-view-row-item-end'>{this.props.amount}</div>
             </div>
         )
     }
@@ -15,10 +15,10 @@ class GrainView extends React.Component {
 class HopView extends React.Component {
     render() {
         return (
-            <div className='recipe-view-hop'>
-                <div className='recipe-view-hop-name'>{this.props.hop.name}</div>
-                <div className='recipe-view-hop-time'>{this.props.time}</div>
-                <div className='recipe-view-hop-amount'>{this.props.amount}</div>
+            <div className='recipe-view-row-list'>
+                <div className='recipe-view-row-item-start'>{this.props.hop.name}</div>
+                <div className='recipe-view-row-item-center'>{this.props.time}</div>
+                <div className='recipe-view-row-item-end'>{this.props.amount}</div>
             </div>
         )
     }
@@ -26,9 +26,9 @@ class HopView extends React.Component {
 class YeastView extends React.Component {
     render() {
         return (
-            <div className='recipe-view-yeast'>
-                <div className='recipe-view-yeast-name'>{this.props.yeast.name}</div>
-                <div className='recipe-view-yeast-amount'>{this.props.amount}</div>
+            <div className='recipe-view-row-list'>
+                <div className='rrecipe-view-row-item-start'>{this.props.yeast.name}</div>
+                <div className='recipe-view-row-item-end'>{this.props.amount}</div>
             </div>
         )
     }
@@ -44,13 +44,13 @@ class RecipeView extends React.Component {
     render() {
         return (
             <div className='recipe-view'>
-                <div className='recipe-view-container'>
+                <div className='recipe-view-column'>
                     <div className='recipe-view-row'>
                         <div className='recipe-view-name'>{this.state.recipe.name}</div>
                         <div className='recipe-view-description'>{this.state.recipe.description}</div>
                     </div>
                 </div>
-                <div className='recipe-view-container'>
+                <div className='recipe-view-column'>
                     <div className='recipe-view-label'>Recipe Parameters</div>
                     <div className='recipe-view-row'>    
                         {this.props.styleList.length ?
@@ -62,22 +62,41 @@ class RecipeView extends React.Component {
                         <div className='recipe-view-item'>Efficiency {this.state.recipe.efficiency}</div>
                     </div>
                 </div>
-                <div className='recipe-view-container'>
+                <div className='recipe-view-column'>
                     <div className='recipe-view-label'>Final Values</div>
-                    <div className='recipe-view-row'>
-                        <div className='recipe-view-item'>O.G. {this.state.recipe.og}</div>
-                        <div className='recipe-view-item'>F.G. {this.state.recipe.fg}</div>
-                        <div className='recipe-view-item'>AVB {this.state.recipe.avb}</div>
-                        <div className='recipe-view-item'>IBU {this.state.recipe.ibu}</div>
-                        <div className='recipe-view-item'>SRM {this.state.recipe.srm}</div>
-                        <button className='recipe-style-compare'>Compare To Style</button>
+                    <div className='recipe-view-column'>
+                        <div className='recipe-view-row'>
+                            <div className='recipe-view-item-label'>Original Gravity</div>
+                            <div className='recipe-view-item-content'>{this.state.recipe.og}</div>
+                        </div>
+                        <div className='recipe-view-row'>
+                            <div className='recipe-view-item-label'>Final Gravity</div> 
+                            <div className='recipe-view-item-content'>{this.state.recipe.fg}</div>
+                        </div>
+                        <div className='recipe-view-row'>
+                            <div className='recipe-view-item-label'>Alcohol By Volume</div> 
+                            <div>{this.state.recipe.avb}</div>
+                        </div>
+                        <div className='recipe-view-row'>
+                            <div className='recipe-view-item-label'>Bitterness(IBU)</div>
+                            <div className='recipe-view-item-content'>{this.state.recipe.ibu}</div>
+                        </div>   
+                        <div className='recipe-view-row'> 
+                            <div className='recipe-view-item-label'>Color(SRM)</div>
+                            <div className='recipe-view-item-content'>{this.state.recipe.srm}</div>
+                        </div>
                     </div>
                 </div>
-                <div className='recipe-view-container'>
-                    <div className='recipe-view-list'>
-                        <div className='recipe-view-label'>Grain Bill</div>
+                <div className='recipe-view-column'>
+                    <div className='recipe-view-label'>Grain Bill</div>
+                    <div className='recipe-view-column'>
                         {this.props.grainList[0] ?
-                            <div className='recipe-view-list-container'>
+                            <div className='recipe-view-column'>
+                                <div className='recipe-view-row-list'>
+                                    <div className='recipe-view-row-item-start' style={{fontWeight: 'bold'}}>Grain</div>
+                                    <div className='recipe-view-row-item-center' style={{fontWeight: 'bold'}}>Percentage</div>
+                                    <div className='recipe-view-row-item-end' style={{fontWeight: 'bold'}}>Amount</div>
+                                </div>
                                 {this.props.grainList.map((grain,index) => (
                                     <GrainView 
                                         key={index}
@@ -88,15 +107,20 @@ class RecipeView extends React.Component {
                                 ))}
                             </div>  
                         :
-                            <h2>Retrieving Grains...</h2>
+                        <h2>Retrieving Grains...</h2>
                         }
                     </div>
                 </div>
-                <div className='recipe-view-container'>
-                    <div className='recipe-view-list'>
-                        <div className='recipe-view-label'>Hop Schedule</div>
+                <div className='recipe-view-column'>
+                    <div className='recipe-view-label'>Hop Schedule</div>
+                    <div className='recipe-view-column'>
                         {this.props.hopList[0] ?
-                            <div className='recipe-view-list-container'>
+                            <div className='recipe-view-column'>
+                                <div className='recipe-view-row-list'>
+                                    <div className='recipe-view-row-item-start' style={{fontWeight: 'bold'}}>Hop</div>
+                                    <div className='recipe-view-row-item-center' style={{fontWeight: 'bold'}}>Time</div>
+                                    <div className='recipe-view-row-item-end' style={{fontWeight: 'bold'}}>Amount</div>
+                                </div>
                                 {this.props.hopList.map((hop,index) => (
                                     <HopView 
                                         key={index}
@@ -111,11 +135,15 @@ class RecipeView extends React.Component {
                         }
                     </div>
                 </div>
-                <div className='recipe-view-container'>
-                    <div className='recipe-view-list'>
-                        <div className='recipe-view-label'>Yeast</div>
+                <div className='recipe-view-column'>
+                    <div className='recipe-view-label'>Yeast</div>
+                    <div className='recipe-view-column'>
                         {this.props.yeastList[0] ? 
-                            <div className='recipe-view-list-container'>
+                            <div className='recipe-view-column'>
+                                <div className='recipe-view-row-list'>
+                                    <div className='recipe-view-row-item-start' style={{fontWeight: 'bold'}}>Yeast</div>
+                                    <div className='recipe-view-row-item-end' style={{fontWeight: 'bold'}}>Amount</div>
+                                </div>
                                 {this.props.yeastList.map((yeast,index) => (
                                     <YeastView 
                                         key={index}

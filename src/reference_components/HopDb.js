@@ -88,13 +88,17 @@ class HopForm extends React.Component {
                         </div>
                         <div className='form-data-column'>
                             <div className='form-data-label'>Notes</div>
-                            <input 
+                            <textarea 
                                 className="form-data-input"
                                 type="text"
                                 name="notes"
                                 id="notes"
                                 value={this.props.notes}
                                 onChange={this.props.handleChange}
+                                style={{
+                                    height: '100px',
+                                    padding: '5px 5px 5px 5px'
+                                }}
                             />
                         </div>
                         <div className='form-data-option'>

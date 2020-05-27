@@ -116,14 +116,19 @@ class StyleForm extends React.Component {
                             />     
                         </div>
                         <div className='form-data-column'>
-                            <div className='form-data-label'>Overview</div>
-                            <input
+                            <div className='form-data-label'>Overview
+                            </div>
+                            <textarea
                                 className='form-data-input'
                                 type="text"
                                 name='overview'
                                 id='overview'
                                 value={this.props.overview}
                                 onChange={this.props.handleChange}
+                                style={{
+                                    height: '100px',
+                                    padding: '5px 5px 5px 5px'
+                                }}
                             />
                         </div>
                         <div className='form-data-row'>
@@ -333,8 +338,8 @@ class StyleGuide extends React.Component {
         .then(resJson => {
             console.log('add styles response: ',resJson)
         })
-        setTimeout(this.getStyleList,100)
-        setTimeout(this.handleFormView(false),300)
+        setTimeout(this.getStyleList,500)
+        setTimeout(this.handleFormView(false),600)
     }
     editStyle = id => {
         fetch(`http://localhost:3000/styles/${id}`, {

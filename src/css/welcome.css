@@ -1,9 +1,14 @@
 .welcome {
-    width: 98%;
+    width: 90%;
+    height: 600px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
+    justify-content: flex-start;
     align-items: center;
+    background-color: rgba(0,0,0,0.1);
+    margin-top: 10px;
+    padding-top: 100px;
 }
 
 .options {
@@ -29,6 +34,19 @@
     align-items: center;
 }
 
+.welcome-header {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 100px;
+}
+
 .welcome-options-btn:hover {
     background-color: rgba(255,255,255,0.4);
+}
+
+p {
+    margin-top: 0px;
+    margin-bottom: 25px;
+    font-weight: bold;
+
 }

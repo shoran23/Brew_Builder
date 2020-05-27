@@ -1,5 +1,6 @@
 .list {
     width: 100%;
+    height: 1280px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -7,16 +8,20 @@
 }
 
 .list-db {
-    width: 81%;
-    height: 1280px;
+    width: 95%;
+    height: 800px;
     background-color: rgba(0,0,0,0.1);
 }
 
 .list-db-list {
+    height: 800px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
+    overflow: scroll;
+    background-color: rgba(0,0,0,0.1);
+    padding-top: 20px;
 }
 
 .list-db-title {
@@ -69,5 +74,32 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+}
+
+.list-db-header {
+    padding-left: 200px;
+    padding-right: 200px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.list-db-header-options {
+    width: 30%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.list-db-see-all, .list-db-add {
+    width: 100px;
+    height: 45px;
+    color: white;
+    background-color: #64B986;
+    font-size: 12px;
+    font-weight: bold;
+    text-shadow: 1px 1px black;
 }
 
