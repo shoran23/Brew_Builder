@@ -4,6 +4,7 @@ import ZingChart from 'zingchart-react'
 class StyleComparison extends React.Component {
     state = {
         chartLabel: "Please Select a Parameter Above",
+        paramSelected: false,
         config: {
             type: 'bar',
             series: [{
@@ -39,6 +40,7 @@ class StyleComparison extends React.Component {
             labelArr.push(`Recipe ${state}`)
             labelArr.push(`Style Min ${state}`)
             labelArr.push(`Style Max ${state}`)
+            this.setState({paramSelected: true})
             this.setState({config:
                 {
                     type: 'scatter',
@@ -49,8 +51,6 @@ class StyleComparison extends React.Component {
                 }
             })
             this.setState({chartLabel: `Compare ${state}`})
-        } else {
-            alert("Please select a style to make a comparison.")
         }
     }
     render() {
@@ -58,18 +58,28 @@ class StyleComparison extends React.Component {
             <div className='view-background'>
                 <div className='view'>
                     <h2>Style Comparison</h2>
-                    <div className='form-data-row'>
-                        <button onClick={() => this.handleChartedValue('IBU')}>IBU</button>
-                        <button onClick={() => this.handleChartedValue('SRM')}>SRM</button>
-                        <button onClick={() => this.handleChartedValue('O.G.')}>O.G.</button>
-                        <button onClick={() => this.handleChartedValue('F.G.')}>F.G.</button>
-                        <button onClick={() => this.handleChartedValue('A.B.V.')}>A.B.V.</button>
+                    <div className='compare-nav-container'>
+                        <div className='form-data-row' style={{alignSelf: 'center'}}>
+                            <button className='style-comp-parameter' onClick={() => this.handleChartedValue('IBU')}>IBU</button>
+                            <button className='style-comp-parameter' onClick={() => this.handleChartedValue('SRM')}>SRM</button>
+                            <button className='style-comp-parameter' onClick={() => this.handleChartedValue('O.G.')}>O.G.</button>
+                            <button className='style-comp-parameter' onClick={() => this.handleChartedValue('F.G.')}>F.G.</button>
+                            <button className='style-comp-parameter' onClick={() => this.handleChartedValue('A.B.V.')}>A.B.V.</button>
+                        </div>
                     </div>
-                    <h3>{this.state.chartLabel}</h3>
-                    <ZingChart 
-                        data={this.state.config}
-                    />
-                    <button onClick={() => this.props.handleStyleCompare(false)}>Close</button>
+                    {this.state.paramSelected ?
+                        <ZingChart 
+                            data={this.state.config}
+                        />
+                    :
+                        <div className='style-comp-select-msg'
+                            style={{
+
+
+                            }}
+                        >{this.state.chartLabel}</div>
+                    }
+                    <button className='style-comp-close' onClick={() => this.props.handleStyleCompare(false)}>Close</button>
                 </div>
 
             </div>

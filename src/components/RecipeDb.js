@@ -12,9 +12,12 @@ class Recipe extends React.Component {
             <div className='list-db-list-item'>
                 <div className='list-db-list-content'>
                     <h3 className='list-db-item-label'>{this.props.recipe.name}</h3>
-                    <div className='list-db-item-options'>
-                        <button className='list-db-item-btn' onClick={() => this.props.viewRecipe(this.props.recipe.id)}>View</button>
-                        <button className='list-db-item-btn' onClick={() => this.props.setUpEdit(this.props.recipe.id)}>Edit</button>
+                    <div className='list-db-item-options'
+                        style={{
+                            justifyContent: 'center'
+                        }}
+                    >
+                        <button className='list-db-item-btn' onClick={() => this.props.viewRecipe(this.props.recipe.id)} style={{marginRight: '20px'}}>View</button>
                         <button className='list-db-item-btn' onClick={() => this.props.deleteReceipeSequence(this.props.recipe.id)}>Delete</button>
                     </div>
                 </div>

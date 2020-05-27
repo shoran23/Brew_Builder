@@ -21,16 +21,16 @@ class RecipeForm extends React.Component {
 
         showStyleCompare: false,
 
-        name: this.props.currentRecipe.name,
-        description: this.props.currentRecipe.description,
-        volume: this.props.currentRecipe.volume,
-        efficiency: this.props.currentRecipe.efficiency,
-        selectedStyle: this.props.currentStyleList[0],
-        og: this.props.currentRecipe.og,
-        fg: this.props.currentRecipe.fg,
-        avb: this.props.currentRecipe.alc_by_vol,
-        ibu: this.props.currentRecipe.ibu,
-        srm: this.props.currentRecipe.srm,
+        name: "",
+        description: "",
+        volume: 5,
+        efficiency: 68,
+        selectedStyle: {},
+        og: 0,
+        fg: 0,
+        avb: 0,
+        ibu: 0,
+        srm: 0,
 
         currentRecipeId: this.props.currentRecipe.id,
 
@@ -409,7 +409,12 @@ class RecipeForm extends React.Component {
     }
     /* Page  *******************************************************************************************/
     handleStyleCompare = state => {
-        this.setState({showStyleCompare: state})
+        if(Object.keys(this.state.selectedStyle).length > 0){
+            this.setState({showStyleCompare: state})
+        } else {
+            alert("Please select a style first.")
+        }
+        
     }
     handleDetailMalt = (malt) => {
         this.setState({detailMalt: malt})
@@ -431,11 +436,19 @@ class RecipeForm extends React.Component {
     }
     render() {
 
-        console.log('Current Style List[0]: ',this.props.currentStyleList[0])
+        //console.log('Current Style List[0]: ',this.props.currentStyleList[0])
         // console.log('Selected Style: ',this.state.selectedStyle)
 
         return (
             <div className='recipe-form'>
+                <div className='recipe-form-data-row' 
+                    style={{width: 'auto',
+
+                }}
+                >
+                    <button className='recipe-form-data-save' onClick={this.addRecipe}>Save</button>
+                    <button className='recipe-form-data-delete' onClick={() => this.props.handlePage('list')}>Cancel</button>
+                </div>
                 <div className='recipe-form-data'>
                     {!this.props.editRecipe ? 
                         <div className='recipe-form-data-title'>Add Recipe</div>
@@ -582,7 +595,7 @@ class RecipeForm extends React.Component {
                     {/* ROW 4 GRAIN BILL *************************************************************/}
                     <div className='recipe-form-data-column-background'>
                         <div className='recipe-form-data-subtitle'>Grain Bill</div>
-                        <button onClick={() => this.changeMaltArraySize('add',0)}>Add</button>
+                        <button className='recipe-form-data-add' onClick={() => this.changeMaltArraySize('add',0)}>Add</button>
                         <div className='recipe-form-data-column'>
                             {this.state.recipeMaltList.map((malt,index) => (
                                 <Malt 
@@ -605,8 +618,8 @@ class RecipeForm extends React.Component {
                     </div>
                     {/* ROW 5 HOP SCHEDULE ***********************************************************/}
                     <div className='recipe-form-data-column-background'>
-                        <div className='reipce-form-data-subtitle'>Hop Schedule</div>
-                        <button onClick={() => this.changeHopArraySize('add',0)}>Add</button>
+                        <div className='recipe-form-data-subtitle'>Hop Schedule</div>
+                        <button className='recipe-form-data-add' onClick={() => this.changeHopArraySize('add',0)}>Add</button>
                         <div className='recipe-form-data-column'>
                             {this.state.recipeHopList.map((hop,index) => (
                                 <Hop
@@ -630,7 +643,6 @@ class RecipeForm extends React.Component {
                     </div>
                     <div className='recipe-form-data-column-background'>
                         <div className='recipe-form-data-subtitle'>Yeast</div>
-                        <button onClick={() => this.changeYeastArraySize('add',0)}>Add</button>
                         <div className='recipe-form-data-column'>
                             {this.state.recipeYeastList.map((yeast,index) => (
                                 <Yeast 
@@ -651,10 +663,6 @@ class RecipeForm extends React.Component {
                         </div>
 
                     </div>
-                </div>
-                <div className='recipe-form-data-row'>
-                    <button onClick={this.addRecipe}>Save</button>
-                    <button onClick={() => this.props.handlePage('list')}>Cancel</button>
                 </div>
                 {this.state.showStyleCompare ?
                     <StyleComparison 

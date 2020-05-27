@@ -20,9 +20,9 @@ class Yeast extends React.Component {
                         options={this.props.yeastList}
                     />
                 </div>
-                <div className='recipe-form-data-column'>
-                    <button onClick={() => this.handleDetailViewLocal(true,this.props.recipeYeastList[this.props.index])}>View</button>
-                    <button onClick={() => this.props.changeYeastArraySize('delete',this.props.index)}>Delete</button>
+                <div className='recipe-form-data-row' style={{width: 'auto', alignSelf: 'flex-end'}}>
+                    <button className='recipe-form-data-view' onClick={() => this.handleDetailViewLocal(true,this.props.recipeYeastList[this.props.index])}>View</button>
+                    <button className='recipe-form-data-delete' onClick={() => this.props.changeYeastArraySize('delete',this.props.index)}>Delete</button>
                 </div>
             </div>
         )

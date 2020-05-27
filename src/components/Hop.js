@@ -54,9 +54,9 @@ class Hop extends React.Component {
                         options={this.props.hopList}
                     />
                 </div>
-                <div className='recipe-form-data-column'>
-                    <button onClick={() => this.handleDetailViewLocal(true,this.props.recipeHopList[this.props.index])}>View</button>
-                    <button onClick={() => this.props.changeHopArraySize('delete',this.props.index)}>Delete</button>
+                <div className='recipe-form-data-row' style={{width: 'auto', alignSelf: 'flex-end'}}>
+                    <button className='recipe-form-data-view' onClick={() => this.handleDetailViewLocal(true,this.props.recipeHopList[this.props.index])}>View</button>
+                    <button className='recipe-form-data-delete' onClick={() => this.props.changeHopArraySize('delete',this.props.index)}>Delete</button>
                 </div>
             </div>
         )
