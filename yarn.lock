@@ -10179,9 +10179,9 @@ tmp@^0.0.33:
     os-tmpdir "~1.0.2"
 
 tmpl@1.0.x:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/tmpl/-/tmpl-1.0.4.tgz#23640dd7b42d00433911140820e5cf440e521dd1"
-  integrity sha1-I2QN17QtAEM5ERQIIOXPRA5SHdE=
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/tmpl/-/tmpl-1.0.5.tgz#8683e0b902bb9c20c4f726e3c0b69f36518c07cc"
+  integrity sha512-3f0uOEAQwIqGuWW2MVzYg8fV/QNnc/IpuJNG837rLuczAaLVHslWHZQj4IGiEl5Hs3kkbhwL9Ab7Hrsmuj+Smw==
 
 to-arraybuffer@^1.0.0:
   version "1.0.1"
@@ -11061,3 +11061,21 @@ yargs@^13.3.0:
     which-module "^2.0.0"
     y18n "^4.0.0"
     yargs-parser "^13.1.2"
+
+"zingchart-constants@github:zingchart/zingchart-constants#master":
+  version "1.0.2"
+  uid e49406c250338a3243e5a277aef7fb48f2e872ee
+  resolved "https://codeload.github.com/zingchart/zingchart-constants/tar.gz/e49406c250338a3243e5a277aef7fb48f2e872ee"
+
+zingchart-react@^2.1.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/zingchart-react/-/zingchart-react-2.2.0.tgz#623df6fb226532f2dd7a0d9ebbfd299ce4550e84"
+  integrity sha512-QnrJjfU1HuVaSPwyDYAiC+4ts14T9vMadle98KbKlsI4iY5G/bM2EIFFjt77MpXzWEK+SMuM4qm0qXMBRvELVg==
+  dependencies:
+    zingchart latest
+    zingchart-constants "github:zingchart/zingchart-constants#master"
+
+zingchart@latest:
+  version "2.9.7"
+  resolved "https://registry.yarnpkg.com/zingchart/-/zingchart-2.9.7.tgz#887446330f2f5571c9d1bcc240c5cbd8fcfd2a13"
+  integrity sha512-kNOBDjaIDcjnPjhM30XLRQpadXzlpUP3ko6VFAVKMx2r+WVTj6HNBL+IgHspYPq4OncpcxRLs4+2xdADDP8bIA==
